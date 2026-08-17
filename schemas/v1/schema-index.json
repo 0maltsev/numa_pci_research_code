@@ -1,0 +1,803 @@
+{
+  "canonical_serialization": "canonical-json-v1",
+  "records": [
+    {
+      "contracts": [
+        "C12",
+        "C20",
+        "C21",
+        "C23"
+      ],
+      "record_type": "AcceptanceRecord",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "acceptance-record.schema.json"
+    },
+    {
+      "contracts": [
+        "C23"
+      ],
+      "record_type": "AggregatedDataset",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "aggregated-dataset.schema.json"
+    },
+    {
+      "contracts": [
+        "C23",
+        "C24"
+      ],
+      "record_type": "AnalysisPlan",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "analysis-plan.schema.json"
+    },
+    {
+      "contracts": [
+        "C10"
+      ],
+      "record_type": "AppliedPlacement",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "applied-placement.schema.json"
+    },
+    {
+      "contracts": [
+        "C08",
+        "C11",
+        "C14"
+      ],
+      "record_type": "CPUAccessProfile",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "cpu-access-profile.schema.json"
+    },
+    {
+      "contracts": [
+        "C06"
+      ],
+      "record_type": "CalibrationDataset",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "calibration-dataset.schema.json"
+    },
+    {
+      "contracts": [
+        "C07"
+      ],
+      "record_type": "CalibrationModelArtifact",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "calibration-model-artifact.schema.json"
+    },
+    {
+      "contracts": [
+        "C06",
+        "C17",
+        "C21",
+        "C23",
+        "C24"
+      ],
+      "record_type": "CampaignDefinition",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "campaign-definition.schema.json"
+    },
+    {
+      "contracts": [
+        "C08"
+      ],
+      "record_type": "CandidateSearchAudit",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "candidate-search-audit.schema.json"
+    },
+    {
+      "contracts": [
+        "C08",
+        "C15",
+        "C16"
+      ],
+      "record_type": "CapacityCheck",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "capacity-check.schema.json"
+    },
+    {
+      "contracts": [
+        "C18"
+      ],
+      "record_type": "ClockQualification",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "clock-qualification.schema.json"
+    },
+    {
+      "contracts": [
+        "C07",
+        "C08"
+      ],
+      "record_type": "CostTermValue",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "cost-term-value.schema.json"
+    },
+    {
+      "contracts": [
+        "C22"
+      ],
+      "record_type": "CounterSample",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "counter-sample.schema.json"
+    },
+    {
+      "contracts": [],
+      "record_type": "DecisionGateLedger",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "decision-gate-ledger.schema.json"
+    },
+    {
+      "contracts": [
+        "C01",
+        "C02",
+        "C21"
+      ],
+      "record_type": "EnvironmentManifest",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "environment-manifest.schema.json"
+    },
+    {
+      "contracts": [
+        "C09"
+      ],
+      "record_type": "ExactReferenceResult",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "exact-reference-result.schema.json"
+    },
+    {
+      "contracts": [
+        "C08",
+        "C12",
+        "C16"
+      ],
+      "record_type": "ExecutionBinding",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "execution-binding.schema.json"
+    },
+    {
+      "contracts": [
+        "C03"
+      ],
+      "record_type": "FrontendCapabilityProfile",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "frontend-capability-profile.schema.json"
+    },
+    {
+      "contracts": [
+        "C03",
+        "C13"
+      ],
+      "record_type": "FrontendProfile",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "frontend-profile.schema.json"
+    },
+    {
+      "contracts": [
+        "C13"
+      ],
+      "record_type": "FrontendRunRecord",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "frontend-run-record.schema.json"
+    },
+    {
+      "contracts": [
+        "C11",
+        "C12",
+        "C14"
+      ],
+      "record_type": "LocationQualifiedObject",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "location-qualified-object.schema.json"
+    },
+    {
+      "contracts": [
+        "C14"
+      ],
+      "record_type": "MemoryObjectRecord",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "memory-object-record.schema.json"
+    },
+    {
+      "contracts": [
+        "C12"
+      ],
+      "record_type": "ObservedPlacement",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "observed-placement.schema.json"
+    },
+    {
+      "contracts": [
+        "C20"
+      ],
+      "record_type": "OracleReport",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "oracle-report.schema.json"
+    },
+    {
+      "contracts": [
+        "C04"
+      ],
+      "record_type": "OwnershipCatalog",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "ownership-catalog.schema.json"
+    },
+    {
+      "contracts": [
+        "C19",
+        "C20"
+      ],
+      "record_type": "PacketExpectation",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "packet-expectation.schema.json"
+    },
+    {
+      "contracts": [
+        "C18",
+        "C20"
+      ],
+      "record_type": "PacketObservation",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "packet-observation.schema.json"
+    },
+    {
+      "contracts": [
+        "C12",
+        "C23"
+      ],
+      "record_type": "PageEquivalenceRecord",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "page-equivalence-record.schema.json"
+    },
+    {
+      "contracts": [
+        "C11"
+      ],
+      "record_type": "PageInitializationRecord",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "page-initialization-record.schema.json"
+    },
+    {
+      "contracts": [
+        "C21"
+      ],
+      "record_type": "PhaseRecord",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "phase-record.schema.json"
+    },
+    {
+      "contracts": [
+        "C08"
+      ],
+      "record_type": "PlacementPlan",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "placement-plan.schema.json"
+    },
+    {
+      "contracts": [
+        "C24"
+      ],
+      "record_type": "PrimaryAnalysisRecord",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "primary-analysis-record.schema.json"
+    },
+    {
+      "contracts": [
+        "C08",
+        "C12",
+        "C13"
+      ],
+      "record_type": "QueueBinding",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "queue-binding.schema.json"
+    },
+    {
+      "contracts": [
+        "C01"
+      ],
+      "record_type": "RawTopologyObservation",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "raw-topology-observation.schema.json"
+    },
+    {
+      "contracts": [
+        "C04",
+        "C08",
+        "C13"
+      ],
+      "record_type": "ReferenceMapping",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "reference-mapping.schema.json"
+    },
+    {
+      "contracts": [
+        "C20"
+      ],
+      "record_type": "ResponseCategory",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "response-category.schema.json"
+    },
+    {
+      "contracts": [
+        "C15"
+      ],
+      "record_type": "RingRecord",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "ring-record.schema.json"
+    },
+    {
+      "contracts": [
+        "C21"
+      ],
+      "record_type": "RunRecord",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "run-record.schema.json"
+    },
+    {
+      "contracts": [
+        "C19"
+      ],
+      "record_type": "SequenceManifest",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "sequence-manifest.schema.json"
+    },
+    {
+      "contracts": [
+        "C05"
+      ],
+      "record_type": "SerializedGraph",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "serialized-graph.schema.json"
+    },
+    {
+      "contracts": [
+        "C24"
+      ],
+      "record_type": "StatisticalAnalysisArtifact",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "statistical-analysis-artifact.schema.json"
+    },
+    {
+      "contracts": [
+        "C22"
+      ],
+      "record_type": "TelemetryRecord",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "telemetry-record.schema.json"
+    },
+    {
+      "contracts": [
+        "C18",
+        "C20"
+      ],
+      "record_type": "TimestampEvidence",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "timestamp-evidence.schema.json"
+    },
+    {
+      "contracts": [
+        "C18"
+      ],
+      "record_type": "TimestampRecord",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "timestamp-record.schema.json"
+    },
+    {
+      "contracts": [
+        "C02"
+      ],
+      "record_type": "TopologySnapshot",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "topology-snapshot.schema.json"
+    },
+    {
+      "contracts": [
+        "C17"
+      ],
+      "record_type": "TrafficGenerationRecord",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "traffic-generation-record.schema.json"
+    },
+    {
+      "contracts": [
+        "C16"
+      ],
+      "record_type": "WorkerRecord",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "worker-record.schema.json"
+    },
+    {
+      "contracts": [
+        "C06",
+        "C08",
+        "C17",
+        "C19"
+      ],
+      "record_type": "WorkloadSpec",
+      "required_test_classes": [
+        "normal-path",
+        "boundary",
+        "malformed-input",
+        "missing-data",
+        "deterministic-replay",
+        "digest-provenance",
+        "declared-failure-status"
+      ],
+      "schema": "workload-spec.schema.json"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

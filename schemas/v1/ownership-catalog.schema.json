@@ -1,0 +1,142 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/ownership-catalog.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Frozen finite ownership entries; no continuous-share domain.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "cardinality": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "catalog_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "catalog_version": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "direction": {
+          "enum": [
+            "rx",
+            "tx",
+            "not_applicable"
+          ],
+          "type": "string"
+        },
+        "entries": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "capability_evidence_digest": {
+                "$ref": "common.schema.json#/$defs/digest"
+              },
+              "control_class": {
+                "enum": [
+                  "Direct",
+                  "ValidatedIndirect",
+                  "ObservedOnly",
+                  "Unsupported"
+                ],
+                "type": "string"
+              },
+              "entry_index": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "observation_coverage_gate": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "observed_share_range": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/quantity"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "owner_role_ids": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "planning_shares": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "owner_id": {
+                      "$ref": "common.schema.json#/$defs/stableId"
+                    },
+                    "share": {
+                      "$ref": "common.schema.json#/$defs/quantity"
+                    }
+                  },
+                  "required": [
+                    "owner_id",
+                    "share"
+                  ],
+                  "type": "object"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "primary_eligibility": {
+                "type": "boolean"
+              },
+              "requested_action": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              }
+            },
+            "required": [
+              "entry_index",
+              "owner_role_ids",
+              "planning_shares",
+              "control_class",
+              "requested_action",
+              "observed_share_range",
+              "observation_coverage_gate",
+              "capability_evidence_digest",
+              "primary_eligibility"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "freeze_time": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "pipeline_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "stable_order_rule": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        }
+      },
+      "required": [
+        "catalog_id",
+        "catalog_version",
+        "freeze_time",
+        "pipeline_id",
+        "direction",
+        "cardinality",
+        "entries",
+        "stable_order_rule"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "OwnershipCatalog"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "OwnershipCatalog",
+  "type": "object"
+}

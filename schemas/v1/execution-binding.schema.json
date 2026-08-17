@@ -1,0 +1,130 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/execution-binding.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Field-level logical-role/context/PU occupancy proof.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "chosen_pu": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "effective_cpu_mask": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "grouping_predicates": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "isolation_class": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "logical_role_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "observation_coverage": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "observed_cpu_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "observed_thread_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "occupancy_group_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "occupied_slot_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "physical_context_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "physical_core_group_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "pipeline_mode": {
+          "enum": [
+            "RTC",
+            "Staged"
+          ],
+          "type": "string"
+        },
+        "requested_cpu_mask": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "service_contributions": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "demand": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "role_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              }
+            },
+            "required": [
+              "role_id",
+              "demand"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "service_sum": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        }
+      },
+      "required": [
+        "physical_context_id",
+        "occupancy_group_id",
+        "logical_role_ids",
+        "pipeline_mode",
+        "grouping_predicates",
+        "requested_cpu_mask",
+        "effective_cpu_mask",
+        "chosen_pu",
+        "physical_core_group_id",
+        "occupied_slot_count",
+        "service_contributions",
+        "service_sum",
+        "isolation_class",
+        "observed_thread_ids",
+        "observed_cpu_ids",
+        "observation_coverage"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "ExecutionBinding"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "ExecutionBinding",
+  "type": "object"
+}

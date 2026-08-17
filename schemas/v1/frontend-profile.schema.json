@@ -1,0 +1,124 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/frontend-profile.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Frozen frontend/pipeline profile without choosing DPDK or AF_XDP prematurely.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "capability_digest": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "driver_mode": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "fixed_queue_pair_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "logical_role_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "ownership_catalog_digests": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/digest"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "physical_context_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "pipeline_mode": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "profile_type": {
+          "enum": [
+            "PendingQualification",
+            "DPDK",
+            "AF_XDP",
+            "Unsupported"
+          ],
+          "type": "string"
+        },
+        "profile_version": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "required_privileges": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "resource_controls": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "control": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "resource_role": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              }
+            },
+            "required": [
+              "resource_role",
+              "control"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "verification_predicates": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        }
+      },
+      "required": [
+        "profile_type",
+        "profile_version",
+        "driver_mode",
+        "fixed_queue_pair_ids",
+        "resource_controls",
+        "logical_role_ids",
+        "physical_context_ids",
+        "pipeline_mode",
+        "ownership_catalog_digests",
+        "capability_digest",
+        "required_privileges",
+        "verification_predicates"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "FrontendProfile"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "FrontendProfile",
+  "type": "object"
+}

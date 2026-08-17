@@ -1,0 +1,149 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/exact-reference-result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Independent full-product exact-small result and exhaustion semantics.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "best_placement_digest": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "best_value": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "cartesian_size": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "elapsed_time": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "enumerators_exhausted": {
+          "type": "boolean"
+        },
+        "exhaustion_certificate_digest": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "feasible_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "heuristic_input_used": {
+          "const": false
+        },
+        "peak_memory": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "preflight_estimates": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/quantity"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "raw_catalog_digests": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/digest"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "rejection_counts": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "constraint_class": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              },
+              "count": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "constraint_class",
+              "count"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "resource_limits": {
+          "additionalProperties": false,
+          "properties": {
+            "maximum_cartesian_size": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            },
+            "maximum_pipelines": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            },
+            "peak_memory_budget": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            },
+            "wall_time_budget": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            }
+          },
+          "required": [
+            "maximum_pipelines",
+            "maximum_cartesian_size",
+            "peak_memory_budget",
+            "wall_time_budget"
+          ],
+          "type": "object"
+        },
+        "terminal_status": {
+          "enum": [
+            "Exact-Feasible",
+            "Proven-Infeasible",
+            "Exact-Budget-Exceeded",
+            "Exact-Execution-Error"
+          ],
+          "type": "string"
+        },
+        "tie_trace": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "visited_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        }
+      },
+      "required": [
+        "terminal_status",
+        "raw_catalog_digests",
+        "heuristic_input_used",
+        "resource_limits",
+        "preflight_estimates",
+        "cartesian_size",
+        "visited_count",
+        "feasible_count",
+        "rejection_counts",
+        "best_placement_digest",
+        "best_value",
+        "tie_trace",
+        "elapsed_time",
+        "peak_memory",
+        "enumerators_exhausted",
+        "exhaustion_certificate_digest"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "ExactReferenceResult"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "ExactReferenceResult",
+  "type": "object"
+}

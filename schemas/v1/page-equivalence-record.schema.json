@@ -1,0 +1,155 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/page-equivalence-record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Immutable pending or order-independent final B0/B1 page-equivalence record.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "b0_page_record_digest": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "b1_page_record_digest": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "input_record_digests_sorted": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/digest"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "latency_input_used": {
+          "const": false
+        },
+        "mandatory_object_join": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "b0_vector": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "domain_id": {
+                      "$ref": "common.schema.json#/$defs/stableId"
+                    },
+                    "fraction": {
+                      "$ref": "common.schema.json#/$defs/quantity"
+                    }
+                  },
+                  "required": [
+                    "domain_id",
+                    "fraction"
+                  ],
+                  "type": "object"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "b1_vector": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "domain_id": {
+                      "$ref": "common.schema.json#/$defs/stableId"
+                    },
+                    "fraction": {
+                      "$ref": "common.schema.json#/$defs/quantity"
+                    }
+                  },
+                  "required": [
+                    "domain_id",
+                    "fraction"
+                  ],
+                  "type": "object"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "coverage_compatible": {
+                "type": "boolean"
+              },
+              "d_tv": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "object_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "status": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              }
+            },
+            "required": [
+              "object_id",
+              "b0_vector",
+              "b1_vector",
+              "coverage_compatible",
+              "d_tv",
+              "status"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "maximum_d_tv": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "prospective_pair_key": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "state": {
+          "enum": [
+            "Pair-Pending",
+            "Pair-Equivalent",
+            "Page-Equivalence-Failed",
+            "Page-Equivalence-Unsupported"
+          ],
+          "type": "string"
+        },
+        "superseded_pending_record_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "tau_mem": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "tau_mem_pilot_digest": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        }
+      },
+      "required": [
+        "prospective_pair_key",
+        "state",
+        "b0_page_record_digest",
+        "b1_page_record_digest",
+        "input_record_digests_sorted",
+        "mandatory_object_join",
+        "tau_mem",
+        "tau_mem_pilot_digest",
+        "maximum_d_tv",
+        "latency_input_used",
+        "superseded_pending_record_ids"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "PageEquivalenceRecord"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "PageEquivalenceRecord",
+  "type": "object"
+}

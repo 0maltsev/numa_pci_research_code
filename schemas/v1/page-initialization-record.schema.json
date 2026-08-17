@@ -1,0 +1,251 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/page-initialization-record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Immutable per-attempt fresh allocation/fault/page observation.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "allocation_order": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "attempt_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "data_plane_affinity_applied_after_fault": {
+          "type": "boolean"
+        },
+        "end_time": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "fault_coverage": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "fault_pattern": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "fresh_allocation_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "fresh_process_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "initialization_context_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "initialization_cpu": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "initializer_rule": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "objects": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "accessor_shares": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "owner_id": {
+                      "$ref": "common.schema.json#/$defs/stableId"
+                    },
+                    "share": {
+                      "$ref": "common.schema.json#/$defs/quantity"
+                    }
+                  },
+                  "required": [
+                    "owner_id",
+                    "share"
+                  ],
+                  "type": "object"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "allocation_actor_id": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "allowed_node_ids": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "backing_source": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "capacity_bytes": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "capacity_slots": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "desired_distribution": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "domain_id": {
+                      "$ref": "common.schema.json#/$defs/stableId"
+                    },
+                    "fraction": {
+                      "$ref": "common.schema.json#/$defs/quantity"
+                    }
+                  },
+                  "required": [
+                    "domain_id",
+                    "fraction"
+                  ],
+                  "type": "object"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "fault_actor_id": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "materiality": {
+                "enum": [
+                  "Material",
+                  "Null"
+                ],
+                "type": "string"
+              },
+              "object_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "observation_coverage": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "observation_status": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              },
+              "observed_distribution": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "domain_id": {
+                      "$ref": "common.schema.json#/$defs/stableId"
+                    },
+                    "fraction": {
+                      "$ref": "common.schema.json#/$defs/quantity"
+                    }
+                  },
+                  "required": [
+                    "domain_id",
+                    "fraction"
+                  ],
+                  "type": "object"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "page_size": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "requested_policy": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "role": {
+                "enum": [
+                  "rx_payload",
+                  "tx_payload",
+                  "rx_descriptor",
+                  "tx_descriptor",
+                  "event_ring",
+                  "state"
+                ],
+                "type": "string"
+              },
+              "used_bytes": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "object_id",
+              "role",
+              "materiality",
+              "capacity_bytes",
+              "used_bytes",
+              "capacity_slots",
+              "page_size",
+              "backing_source",
+              "desired_distribution",
+              "requested_policy",
+              "allowed_node_ids",
+              "allocation_actor_id",
+              "fault_actor_id",
+              "accessor_shares",
+              "observed_distribution",
+              "observation_coverage",
+              "observation_status"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "observation_integrity_status": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "pair_distance_present": {
+          "const": false
+        },
+        "policy": {
+          "enum": [
+            "B0",
+            "B1",
+            "B2",
+            "B3"
+          ],
+          "type": "string"
+        },
+        "start_time": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "topology_blind": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "attempt_id",
+        "policy",
+        "fresh_process_id",
+        "fresh_allocation_id",
+        "initialization_context_id",
+        "initialization_cpu",
+        "initializer_rule",
+        "topology_blind",
+        "data_plane_affinity_applied_after_fault",
+        "objects",
+        "allocation_order",
+        "fault_pattern",
+        "fault_coverage",
+        "start_time",
+        "end_time",
+        "observation_integrity_status",
+        "pair_distance_present"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "PageInitializationRecord"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "PageInitializationRecord",
+  "type": "object"
+}

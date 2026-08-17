@@ -1,0 +1,213 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/calibration-dataset.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Complete-run calibration rows and fold-admissibility evidence.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_folds": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "admissible": {
+                "type": "boolean"
+              },
+              "findings": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "fold_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "relation_blocks_intact": {
+                "type": "boolean"
+              },
+              "training_condition_coverage": {
+                "type": "boolean"
+              },
+              "training_run_ids": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "validation_run_ids": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 0,
+                "type": "array"
+              }
+            },
+            "required": [
+              "fold_id",
+              "validation_run_ids",
+              "training_run_ids",
+              "relation_blocks_intact",
+              "training_condition_coverage",
+              "admissible",
+              "findings"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "condition_relation_coverage_map": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "condition_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "independent_relation_count": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "placement_relation_ids": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 1,
+                "type": "array",
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "condition_id",
+              "placement_relation_ids",
+              "independent_relation_count"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "confirmatory_ids_excluded": {
+          "const": true
+        },
+        "feature_order": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "rows": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "acceptance_record_digest": {
+                "$ref": "common.schema.json#/$defs/digest"
+              },
+              "condition_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "features": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "feature_id": {
+                      "$ref": "common.schema.json#/$defs/stableId"
+                    },
+                    "group": {
+                      "$ref": "common.schema.json#/$defs/nonemptyString"
+                    },
+                    "normalized_value": {
+                      "$ref": "common.schema.json#/$defs/quantity"
+                    },
+                    "transform": {
+                      "$ref": "common.schema.json#/$defs/nonemptyString"
+                    }
+                  },
+                  "required": [
+                    "feature_id",
+                    "group",
+                    "normalized_value",
+                    "transform"
+                  ],
+                  "type": "object"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "fold_id": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "latency_unit_before_log": {
+                "enum": [
+                  "nanosecond",
+                  "microsecond",
+                  "second"
+                ],
+                "type": "string"
+              },
+              "placement_relation_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "response_log_p999": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "run_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "split": {
+                "enum": [
+                  "Training",
+                  "ExternalValidationSeen",
+                  "ExternalValidationUnseen"
+                ],
+                "type": "string"
+              },
+              "valid_observation_count": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "run_id",
+              "condition_id",
+              "placement_relation_id",
+              "response_log_p999",
+              "latency_unit_before_log",
+              "valid_observation_count",
+              "features",
+              "split",
+              "fold_id",
+              "acceptance_record_digest"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "rows",
+        "condition_relation_coverage_map",
+        "candidate_folds",
+        "feature_order",
+        "confirmatory_ids_excluded"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "CalibrationDataset"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "CalibrationDataset",
+  "type": "object"
+}

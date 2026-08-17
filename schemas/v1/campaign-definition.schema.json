@@ -1,0 +1,157 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/campaign-definition.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Versioned campaign template with unresolved stand values retained as typed states.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "analysis_plan": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "attrition_sensitivity": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "campaign_id": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "campaign_template_version": {
+          "const": "1.0.0"
+        },
+        "confirmatory_execution_permitted": {
+          "const": false
+        },
+        "cooldown_duration": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "cost_coefficients": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "counter_set": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "decision_ledger_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "fixed_attempt_schedule": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "frontend_profile": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "huge_page_size": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "measurement_duration": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "offered_rates": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/quantity"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "primary_nic_port_bdf": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "protocol_input_digests": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/digest"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "queue_counts": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/quantity"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "randomization_seed": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "reference_condition": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "smallest_relevant_effect": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "stage": {
+          "enum": [
+            "Template",
+            "Feasibility",
+            "Calibration",
+            "Confirmatory",
+            "Robustness",
+            "Analysis"
+          ],
+          "type": "string"
+        },
+        "tau_mem": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "timestamp_mechanism": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "topology_snapshot": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "warmup_duration": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "worker_counts": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/quantity"
+          },
+          "minItems": 0,
+          "type": "array"
+        }
+      },
+      "required": [
+        "campaign_template_version",
+        "campaign_id",
+        "stage",
+        "decision_ledger_digest",
+        "analysis_plan",
+        "frontend_profile",
+        "topology_snapshot",
+        "primary_nic_port_bdf",
+        "timestamp_mechanism",
+        "counter_set",
+        "huge_page_size",
+        "tau_mem",
+        "cost_coefficients",
+        "smallest_relevant_effect",
+        "warmup_duration",
+        "cooldown_duration",
+        "measurement_duration",
+        "offered_rates",
+        "queue_counts",
+        "worker_counts",
+        "reference_condition",
+        "randomization_seed",
+        "fixed_attempt_schedule",
+        "attrition_sensitivity",
+        "protocol_input_digests",
+        "confirmatory_execution_permitted"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "CampaignDefinition"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "CampaignDefinition",
+  "type": "object"
+}

@@ -1,0 +1,88 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/response-category.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Field-level exhaustive response classification.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "binding_results": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "candidate_response_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "expected_sequence_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "final_category": {
+          "enum": [
+            "valid",
+            "missing",
+            "corrupt",
+            "duplicate",
+            "ambiguous"
+          ],
+          "type": "string"
+        },
+        "format_results": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "out_of_range": {
+          "type": "boolean"
+        },
+        "payload_results": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "timestamp_results": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        }
+      },
+      "required": [
+        "expected_sequence_id",
+        "candidate_response_ids",
+        "format_results",
+        "payload_results",
+        "binding_results",
+        "timestamp_results",
+        "final_category",
+        "out_of_range"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "ResponseCategory"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "ResponseCategory",
+  "type": "object"
+}

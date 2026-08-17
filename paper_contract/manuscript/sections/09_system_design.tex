@@ -1,0 +1,66 @@
+\section{Automatic-Configuration Design}
+\label{sec:design}
+
+\subsection{Architecture and information flow}
+
+The proposed \system{} architecture has seven conceptual components. They exchange versioned documents rather than implicit process state; no component implementation is part of this manuscript.
+
+\begin{enumerate}[leftmargin=*,itemsep=3pt]
+  \item The \emph{topology inspector} collects hwloc, sysfs, BDF, CPU/node, queue, IRQ, huge-page, driver, and clock information with provenance and access errors.
+  \item The \emph{normalized graph builder} validates joins and emits $G_s$, an inventory of unknown attributes, and a snapshot digest.
+  \item The optional \emph{calibrator} also consumes a versioned frontend capability record and its finite ownership catalogs, then emits normalized path attributes, scales, weights, uncertainty, and a validity domain.
+  \item The \emph{placement planner} consumes $G_s$, a workload contract, frontend capabilities and catalog digests, hard constraints, a reference-mapping restriction when applicable, and calibrated parameters; it emits a complete RX/TX placement, completion status, decomposed score, candidate/search audit, conflict witnesses, and fallback level. A separate exact-small checker consumes the uncapped raw catalogs and never restricts itself using the heuristic output.
+  \item The \emph{configuration applicator and page initializer} convert a \textsc{Feasible} abstract placement into ordered frontend-specific operations for fresh allocation and faulting, physical-execution-context affinity, payload and descriptor memory policy, huge-page-backed pools, event rings, queue ownership, worker mapping, and IRQ, polling, or completion roles.
+  \item The \emph{validator and telemetry collector} independently reads back logical-role-to-thread grouping, effective physical-context CPU masks, observed CPUs, page distributions, queue/IRQ ownership, observed service shares, link state, counters, and progress. It emits a pass/fail record rather than editing the plan.
+  \item The \emph{wire-to-wire harness} schedules traffic, external timestamps, sequence manifests, correctness checks, and run metadata without participating in the SUT placement decision.
+\end{enumerate}
+
+\Cref{fig:architecture} shows the contracts. Separating desired, applied, and observed placement is essential: an accepted system call proves only that a request was made. Scheduler defects and complex NUMA behavior motivate independent read-back \cite{lozi2016linuxscheduler}.
+
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[
+    node distance=9mm and 8mm,
+    b/.style={draw,rounded corners,align=center,font=\footnotesize,minimum width=29mm,minimum height=9mm},
+    a/.style={-{Latex[length=2mm]},thick}
+  ]
+    \node[b] (inspect) {topology\\inspector};
+    \node[b,right=of inspect] (graph) {normalized\\graph builder};
+    \node[b,right=of graph] (plan) {placement\\planner};
+    \node[b,right=of plan] (apply) {configuration\\applicator};
+    \node[b,below=of graph] (cal) {calibrator};
+    \node[b,below=of plan] (bench) {wire-to-wire\\harness};
+    \node[b,below=of apply] (valid) {validator and\\telemetry};
+    \draw[a] (inspect) -- (graph);
+    \draw[a] (graph) -- (plan);
+    \draw[a] (plan) -- (apply);
+    \draw[a] (graph) -- (cal);
+    \draw[a] (cal) -- (plan);
+    \draw[a] (apply) -- (valid);
+    \draw[a] (valid) -- node[right,font=\tiny]{gate} (bench);
+    \draw[a] (bench) -- node[above,font=\tiny]{run contract} (apply);
+    \draw[a,bend right=18] (bench) to node[below,font=\tiny]{calibration observations} (cal);
+  \end{tikzpicture}
+  \caption{Conceptual information flow. The validator converts applied state and run evidence into an observed-placement gate; desired, applied, and observed records remain distinct and share a topology-snapshot identifier.}
+  \label{fig:architecture}
+\end{figure}
+
+\subsection{Component contracts}
+
+The inspector is read-only. Its output includes raw-source references and errors so that a builder cannot mistake missing privilege for missing hardware. The graph builder accepts only mutually consistent host, boot, and collection identifiers. The calibrator declares the topology, frontend, firmware/driver, clock/power profile, packet-size domain, and workload range in which its parameters are valid.
+
+The planner output is declarative: RX/TX BDF, port, and queue identities; reference or optimized worker mappings; selected finite ownership-catalog indices, derived owner sets and planning shares, their direct/indirect/observed-only control class, and catalog digest; RX/TX payload-pool and descriptor-memory identities with $\nu_X$ for material objects; explicit $b_\varnothing$ or $a_\varnothing$ where applicable; worker and I/O roles; each role's physical execution context; every active context's PU; occupancy, service, and capacity ledgers; ordered application actions; completion and fallback status; and verification predicates. Only a \textsc{Feasible} plan reaches the applicator. The applicator records desired and requested values separately, produces a journal entry before each mutation, and stops on the first failed prerequisite. For an observed-only share it records no share-setting action and never states that $\vect{\bar\pi}$ was applied. The validator receives the plan but uses independent observations and records $\vect{\widetilde\pi}$ with coverage and the predeclared acceptance-set result. The benchmark starts only after all mandatory predicates pass.
+
+\subsection{Applying and validating placement}
+
+CPU placement is requested once per physical execution context through thread-affinity or cpuset mechanisms and verified from the effective mask and repeated observed-CPU samples. RTC poller and worker roles must resolve to the same thread/context ID and consume one slot; staged roles must resolve to distinct IDs and slots. The page initializer creates fresh RX/TX payload, controllable descriptor, material event-ring, and material state allocations for every attempt. It records desired policy, requested policy, initializer identity, allocation/fault sequence, and observed page-to-node distribution as distinct facts. Memory policy is requested before faulting where the baseline requires it; the B0/B1 invariant initializer instead uses the common default policy and completes faulting before data-plane affinity is applied. A requested policy alone is insufficient. DPDK RX/TX ownership and completion responsibilities are verified against the reference or B3-selected catalog entry using frontend telemetry and hardware statistics. AF\_XDP queue identity, UMEM, all four ring types, zero-copy/copy mode, need-wakeup, and polling mode are frozen and read back where supported. IRQ affinity is applied and checked only for an interrupt-driven profile; userspace polling instead validates each poller's physical context, PU, owner set, and observed share. An indirect share must lie in its catalog acceptance set; an observed-only share is reported as an observation, not as successful application of $\vect{\bar\pi}$.
+
+RSS keys and indirection tables, flow rules, RX/TX queue counts, descriptor counts, offloads, MTU, and link state belong to the frontend contract. Queue steering research shows that indirection and load balance are distinct from thread pinning \cite{barbette2019rsspp}. The validator therefore injects a short, non-scientific mapping probe before the measured run and checks per-queue counters against the expected flow-to-queue relation.
+
+\subsection{Privileges, observability, and rollback}
+
+Likely privileged operations include userspace-driver binding, queue and RSS configuration, interrupt routing, huge-page reservation, memory-policy changes, CPU isolation, selected physical-page queries, and performance-counter access. The future implementation must enumerate each privilege, use the narrowest mechanism available, and fail closed. The design does not assume that all counters or physical addresses will be accessible.
+
+Before application, the journal captures the reversible prior state: CPU masks, memory policy, RSS/flow configuration, IRQ masks, governor/power settings controlled by the experiment, huge-page allocation, and frontend binding. Rollback occurs in reverse dependency order and is followed by read-back. A failed rollback marks the host dirty and prevents further scientific runs until an operator restores and re-snapshots it. Operations such as firmware changes or reboot-time kernel parameters are outside per-run rollback and belong to testbed provisioning.
+
+Telemetry has explicit attribution limits. Uncore counters may cover a socket rather than a stream; PCIe counters can be absent; page-location sampling can perturb caches; and queue counters can wrap. Each record includes scope, unit, width, sample interval, multiplexing status, and missingness. Counter correlation is explanatory and does not substitute for controlled baseline differences.

@@ -1,0 +1,146 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/decision-gate-ledger.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Typed D01-D23 protocol decision state and resolution evidence.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_states": {
+          "items": {
+            "enum": [
+              "Frozen",
+              "PendingQualification",
+              "BlockedOnTestbed",
+              "UnresolvedScientificDecision",
+              "Unsupported",
+              "NotApplicable"
+            ],
+            "type": "string"
+          },
+          "minItems": 6,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "frozen_decision_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 5,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "gates": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "affected_components": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "allowed_options": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "decision": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              },
+              "decision_id": {
+                "pattern": "D(?:0[1-9]|1[0-9]|2[0-3])",
+                "type": "string"
+              },
+              "evidence_digests": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/digest"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "freeze_point": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              },
+              "recommended_default": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "reopen_conditions": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              },
+              "resolved_value": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "selection_evidence": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              },
+              "state": {
+                "enum": [
+                  "Frozen",
+                  "PendingQualification",
+                  "BlockedOnTestbed",
+                  "UnresolvedScientificDecision",
+                  "Unsupported",
+                  "NotApplicable"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "decision_id",
+              "decision",
+              "state",
+              "allowed_options",
+              "recommended_default",
+              "resolved_value",
+              "selection_evidence",
+              "evidence_digests",
+              "freeze_point",
+              "affected_components",
+              "reopen_conditions"
+            ],
+            "type": "object"
+          },
+          "minItems": 23,
+          "type": "array"
+        },
+        "ledger_version": {
+          "const": "1.0.0"
+        },
+        "unresolved_decision_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 18,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "ledger_version",
+        "allowed_states",
+        "gates",
+        "frozen_decision_ids",
+        "unresolved_decision_ids"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "DecisionGateLedger"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "DecisionGateLedger",
+  "type": "object"
+}

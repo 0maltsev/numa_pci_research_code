@@ -1,0 +1,63 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/serialized-graph.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Portable deterministic graph serialization artifact.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_order_declaration": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "encoding": {
+          "const": "canonical-json-v1"
+        },
+        "graph_document_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "roundtrip_status": {
+          "enum": [
+            "Verified",
+            "Roundtrip-Mismatch",
+            "Noncanonical-Order",
+            "Digest-Mismatch"
+          ],
+          "type": "string"
+        },
+        "snapshot_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "source_digest_list": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/digest"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "snapshot_digest",
+        "encoding",
+        "canonical_order_declaration",
+        "source_digest_list",
+        "graph_document_digest",
+        "roundtrip_status"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "SerializedGraph"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "SerializedGraph",
+  "type": "object"
+}

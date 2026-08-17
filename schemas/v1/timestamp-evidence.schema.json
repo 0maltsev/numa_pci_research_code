@@ -1,0 +1,73 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/timestamp-evidence.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Field-level paired timestamp validity evidence.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "capture_layer": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "clock_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "conversion_rule": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "epoch_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "qualification_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "request_raw_ticks": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "response_raw_ticks": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "sequence_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "valid": {
+          "type": "boolean"
+        },
+        "validity_reason": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "wrap_extension_state": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        }
+      },
+      "required": [
+        "sequence_id",
+        "request_raw_ticks",
+        "response_raw_ticks",
+        "clock_id",
+        "epoch_id",
+        "capture_layer",
+        "conversion_rule",
+        "wrap_extension_state",
+        "valid",
+        "validity_reason",
+        "qualification_digest"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "TimestampEvidence"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "TimestampEvidence",
+  "type": "object"
+}

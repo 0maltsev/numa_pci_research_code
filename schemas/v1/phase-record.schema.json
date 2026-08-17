@@ -1,0 +1,106 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/phase-record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Planned/actual lifecycle boundary and performance-blind gate record.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "actual_end": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "actual_start": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "gate_result": {
+          "enum": [
+            "Pass",
+            "Fail",
+            "NotApplicable"
+          ],
+          "type": "string"
+        },
+        "latency_summary_input_used": {
+          "const": false
+        },
+        "phase_name": {
+          "enum": [
+            "Reset",
+            "Allocate",
+            "Fault",
+            "ObservePages",
+            "ApplyPlacement",
+            "ReadBack",
+            "WarmUp",
+            "Measure",
+            "Drain",
+            "PostValidate",
+            "Cooldown",
+            "Teardown",
+            "Rollback"
+          ],
+          "type": "string"
+        },
+        "planned_end": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "planned_start": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "reason": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "run_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "stability_inputs": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "metric_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "value": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "metric_id",
+              "value"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        }
+      },
+      "required": [
+        "run_id",
+        "phase_name",
+        "planned_start",
+        "planned_end",
+        "actual_start",
+        "actual_end",
+        "stability_inputs",
+        "gate_result",
+        "reason",
+        "latency_summary_input_used"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "PhaseRecord"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "PhaseRecord",
+  "type": "object"
+}

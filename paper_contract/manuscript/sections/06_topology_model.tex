@@ -1,0 +1,122 @@
+\section{Typed Hardware-Topology Graph}
+\label{sec:graph}
+
+\subsection{Definition}
+
+For snapshot $s$, define
+\begin{equation}
+  G_s=(V,E,\tau_V,\tau_E,a_V,a_E),
+  \label{eq:typed-graph}
+\end{equation}
+where $V$ and $E\subseteq V\times V$ are finite vertices and directed edges, $\tau_V:V\rightarrow T_V$ and $\tau_E:E\rightarrow T_E$ are type functions, and $a_V$, $a_E$ map objects to typed attribute records. Opposite directed edges may have different attributes; symmetry is never assumed.
+
+Vertex types are grouped as follows:
+
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \emph{compute}: machine, socket/package, core, PU, and physical execution context/occupancy group;
+  \item \emph{memory/cache}: NUMA node, memory domain, huge-page pool, packet-buffer pool, and cache domain at each relevant level;
+  \item \emph{PCIe/I/O}: root complex or root domain, root port, bridge, switch, endpoint/function, NIC port, RX queue, and TX queue; and
+  \item \emph{software path}: logical poller/IRQ/completion role, runtime-worker role, event bus/ring, and distinguished null role/object where applicable.
+\end{itemize}
+
+Edge types include \textsc{contains}, \textsc{shares-cache}, \textsc{cpu-affinity}, \textsc{realizes-role}, \textsc{memory-affinity}, \textsc{pcie-parent}, \textsc{pcie-route}, \textsc{dma-access}, \textsc{cpu-memory-access}, \textsc{socket-link}, \textsc{owns-queue}, \textsc{produces}, and \textsc{consumes}. A \textsc{realizes-role} edge maps one or more compatible logical roles to one physical execution context; only those physical contexts consume PU slots. Containment edges form useful hierarchies, but $G_s$ is not restricted to a tree: cache sharing, NUMA distances, alternate routes, and application communication can cross a containment tree. This extends topology-mapping graph formulations \cite{hoefler2011topologymapping} with resource and relation types needed for I/O.
+
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[
+    x=1mm,y=1mm,
+    comp/.style={draw,rounded corners,fill=blue!8,minimum width=14mm,minimum height=6mm,align=center,font=\scriptsize},
+    mem/.style={draw,rounded corners,fill=green!10,minimum width=16mm,minimum height=6mm,align=center,font=\scriptsize},
+    io/.style={draw,rounded corners,fill=orange!13,minimum width=15mm,minimum height=6mm,align=center,font=\scriptsize},
+    soft/.style={draw,rounded corners,fill=violet!10,minimum width=15mm,minimum height=6mm,align=center,font=\scriptsize},
+    cont/.style={-{Latex[length=1.6mm]},gray!75},
+    data/.style={-{Latex[length=1.8mm]},thick},
+    cross/.style={-{Latex[length=1.8mm]},thick,dashed,red!65!black}
+  ]
+    \node[comp] (s0) at (10,32) {socket 0};
+    \node[comp] (c0) at (10,21) {core/PU 0};
+    \node[mem] (n0) at (31,32) {NUMA 0};
+    \node[mem] (llc0) at (31,21) {LLC domain 0};
+    \node[io] (rc0) at (10,45) {PCIe root 0};
+    \node[io] (nic) at (31,45) {NIC function};
+    \node[io] (rx) at (51,49) {RX queue};
+    \node[io] (tx) at (51,41) {TX queue};
+
+    \node[comp] (s1) at (86,32) {socket 1};
+    \node[comp] (c1) at (86,21) {core/PU 1};
+    \node[mem] (n1) at (65,32) {NUMA 1};
+    \node[mem] (llc1) at (65,21) {LLC domain 1};
+
+    \node[mem] (desc) at (9,7) {RX/TX descriptors};
+    \node[mem] (pool) at (33,7) {payload pool};
+    \node[soft] (ctx) at (56,7) {I/O context};
+    \node[mem] (ring) at (78,7) {event ring};
+    \node[soft] (work) at (99,7) {worker};
+
+    \draw[cont] (s0) -- (c0);
+    \draw[cont] (s0) -- (n0);
+    \draw[cont] (s0) -- (llc0);
+    \draw[cont] (s1) -- (c1);
+    \draw[cont] (s1) -- (n1);
+    \draw[cont] (s1) -- (llc1);
+    \draw[cont] (rc0) -- (nic);
+    \draw[cont] (nic) -- (rx);
+    \draw[cont] (nic) -- (tx);
+    \draw[dashed,red!65!black,thick] (s0.north) -- (10,37);
+    \draw[dashed,red!65!black,thick,<->] (10,37) --
+      node[pos=0.25,below=0.4mm,fill=white,inner sep=0.2mm,font=\tiny]{socket link} (86,37);
+    \draw[dashed,red!65!black,thick] (86,37) -- (s1.north);
+    \draw[data,rounded corners=2mm]
+      (rx.north) -- (51,54) -- (0,54) -- (0,7) -- (desc.west);
+    \draw[cross,rounded corners=2mm]
+      (rx.south) -- (47,36) -- (47,12) -- (pool.north);
+    \draw[data] (desc) -- (ctx);
+    \draw[data] (pool) -- (ctx);
+    \draw[data] (ctx) -- (ring);
+    \draw[cross] (ring) -- (work);
+    \draw[data] (work) to[bend left=18] (pool);
+    \draw[data,rounded corners=2mm]
+      (work.east) -- (108,7) -- (108,41) -- (tx.east);
+    \draw[cont] (desc) -- (n0);
+    \draw[cont] (pool) -- (n1);
+    \draw[cont] (ring) -- (n0);
+    \draw[cont] (ctx) -- (c0);
+    \draw[cont] (work) -- (c1);
+  \end{tikzpicture}
+  \caption{Illustrative typed graph fragment. Gray edges express containment or affinity; solid black and dashed red edges are direction-specific local and cross-socket data/control relations. The graph keeps compute, memory, PCIe, queue, and software objects distinct even when the platform reports proximity between them.}
+  \label{fig:typed-graph}
+\end{figure}
+
+Vertex attributes include stable-within-snapshot identity, online state, capacity, eligible CPU set, BDF, queue index, memory policy, page size, location distribution $\nu_X$, and provenance. Edge attributes may include hop or crossing count, direction, negotiated PCIe generation and width, calibrated latency, calibrated bandwidth, counter identity, utilization, confidence, and observation time. Every value carries one of four provenance classes: \textsc{discovered}, \textsc{derived}, \textsc{calibrated}, or \textsc{unknown}. $\unknown$ does not compare equal to zero and cannot create a preferred path.
+
+\subsection{Discovery and normalization}
+
+The topology inspector combines complementary sources. hwloc supplies the machine's compute/cache/NUMA hierarchy, CPU sets, distance information where exported, and PCI device ancestry \cite{goglin2014hwloc}. Linux sysfs supplies PCI devices and parent paths, NUMA hints, online CPU/node lists, network-interface queue directories, MSI-X/IRQ associations where applicable, huge-page inventory, and device link properties exposed by the driver. PCI BDF values join hwloc I/O objects to sysfs and the selected network interface. Linux affinity and NUMA interfaces supply requested masks and policies; independent read-back supplies observed masks and page locations.
+
+Not all graph vertices have a direct kernel object. Hardware queue vertices can be synthesized from driver/frontend metadata and bound to a port/function by a recorded join. A root complex may appear only as the boundary above a set of root ports; in that case the builder creates a \textsc{derived} root-domain vertex and records the rule, rather than inventing a physical identifier. Firmware may omit distance, routing, or switch-internal contention. Such attributes remain $\unknown$ until a calibration experiment supplies a value.
+
+Normalization enforces invariants before planning:
+
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+  \item every online PU belongs to exactly one discovered core and one declared package, while NUMA and cache memberships are represented independently;
+  \item every selected NIC port resolves to one endpoint BDF, and every declared hardware queue resolves to that port;
+  \item each pool resolves to an allowed set of NUMA nodes and later to an observed page-distribution record;
+  \item every logical worker/I/O role resolves to a permitted physical execution context, and every active physical context has an eligible CPU set; and
+  \item each edge attribute includes its source, collection time, unit, and confidence.
+\end{enumerate}
+
+Violation stops planning unless a named fallback profile permits the missing fact. A serialized graph includes a schema version, snapshot identifier, host boot identifier, kernel identity, timestamps, source-file digests, and warnings. hwloc XML exports are retained as portable fixtures for off-stand testing, an approach enabled by hwloc's topology serialization \cite{goglin2014hwloc}.
+
+\subsection{Path queries and calibrated attributes}
+
+The planner does not equate a NUMA distance with all traffic. It issues typed queries: endpoint-to-descriptor and endpoint-to-payload for RX/TX DMA, memory-to-PU for context/worker access, producer-to-consumer for coherence, and PU-to-endpoint for MMIO or doorbells. A path query returns a vector rather than a scalar:
+\begin{equation}
+  \vect{d}(u,v)=(h_{\mathrm{pcie}},h_{\mathrm{socket}},d_{\mathrm{numa}},
+  \hat{L},\hat{B},\hat{X},c),
+  \label{eq:path-vector}
+\end{equation}
+where the first three entries are structural, $\hat{L}$ and $\hat{B}$ are calibrated latency and bandwidth when available, $\hat{X}$ is observed contention for a workload interval, and $c$ is confidence. Direction-specific values are retained. Hostping's distinction between structural paths and runtime bottlenecks motivates this separation \cite{liu2023hostping}; asymmetry and congestion results motivate avoiding a hop-only order \cite{lepers2015asymmetry,dashti2013carrefour}.
+
+\subsection{Limits of observability}
+
+The graph represents what can be supported, not an idealized circuit diagram. Firmware and the operating system can collapse root-complex details, report a NUMA hint of $-1$, omit queue-to-interrupt data, virtualize PCI functions, or deny performance-counter access. IOMMU routing and DDIO policy may be only partially observable. Dynamic counter attribution can be socket-wide rather than queue-specific. These limits appear in graph provenance and later confidence intervals; they are not repaired by assuming that a device is local to NUMA node~0. The topology snapshot is also invalidated by CPU/NIC hotplug, driver reload, queue reconfiguration, or a changed boot identity.

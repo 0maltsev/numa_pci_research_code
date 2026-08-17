@@ -1,0 +1,113 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/workload-spec.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Versioned workload and exact expected-set contract.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "burst_model": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "cooldown_duration": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "drain_deadline": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "expected_request_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "flow_distribution": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "flow_keys": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "io_role_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "measurement_duration": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "offered_rate_rule": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "on_wire_bytes": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "packet_bytes": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "physical_context_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "pipeline_mode": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "queue_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "resolved_packet_rate": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "sequence_manifest_digest": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "service_operation": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "trace_digest": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "warmup_duration": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "worker_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        }
+      },
+      "required": [
+        "packet_bytes",
+        "on_wire_bytes",
+        "flow_keys",
+        "flow_distribution",
+        "offered_rate_rule",
+        "resolved_packet_rate",
+        "trace_digest",
+        "burst_model",
+        "queue_count",
+        "worker_count",
+        "io_role_count",
+        "physical_context_count",
+        "pipeline_mode",
+        "service_operation",
+        "sequence_manifest_digest",
+        "warmup_duration",
+        "measurement_duration",
+        "expected_request_count",
+        "drain_deadline",
+        "cooldown_duration"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "WorkloadSpec"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "WorkloadSpec",
+  "type": "object"
+}

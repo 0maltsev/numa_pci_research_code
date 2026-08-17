@@ -1,0 +1,164 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/location-qualified-object.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Field-level desired/requested/observed location-qualified object.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "accessor_shares": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "owner_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "share": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "owner_id",
+              "share"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "allocation_actor_id": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "allowed_node_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "backing_source": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "capacity_bytes": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "capacity_slots": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "desired_distribution": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "domain_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "fraction": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "domain_id",
+              "fraction"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "fault_actor_id": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "materiality": {
+          "enum": [
+            "Material",
+            "Null"
+          ],
+          "type": "string"
+        },
+        "object_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "observation_coverage": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "observation_status": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "observed_distribution": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "domain_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "fraction": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "domain_id",
+              "fraction"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "page_size": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "requested_policy": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "role": {
+          "enum": [
+            "rx_payload",
+            "tx_payload",
+            "rx_descriptor",
+            "tx_descriptor",
+            "event_ring",
+            "state"
+          ],
+          "type": "string"
+        },
+        "used_bytes": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        }
+      },
+      "required": [
+        "object_id",
+        "role",
+        "materiality",
+        "capacity_bytes",
+        "used_bytes",
+        "capacity_slots",
+        "page_size",
+        "backing_source",
+        "desired_distribution",
+        "requested_policy",
+        "allowed_node_ids",
+        "allocation_actor_id",
+        "fault_actor_id",
+        "accessor_shares",
+        "observed_distribution",
+        "observation_coverage",
+        "observation_status"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "LocationQualifiedObject"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "LocationQualifiedObject",
+  "type": "object"
+}

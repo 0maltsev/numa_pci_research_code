@@ -1,0 +1,304 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/placement-plan.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Declarative feasible placement; it performs no host mutation.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "assignments": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "context_pu_ids": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "memory_object_ids": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "pipeline_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "queue_binding_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "role_context_ids": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "rx_catalog_index": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "tx_catalog_index": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "worker_role_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              }
+            },
+            "required": [
+              "pipeline_id",
+              "queue_binding_id",
+              "worker_role_id",
+              "rx_catalog_index",
+              "tx_catalog_index",
+              "role_context_ids",
+              "context_pu_ids",
+              "memory_object_ids"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "capability_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "catalog_digests": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/digest"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "constraint_proofs": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "constraint_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "evidence_digest": {
+                "$ref": "common.schema.json#/$defs/digest"
+              },
+              "pass": {
+                "const": true
+              }
+            },
+            "required": [
+              "constraint_id",
+              "pass",
+              "evidence_digest"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "cost_terms": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "base_reference": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "component_weight": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "group_coefficient": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "initiator_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "load_attribution": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "normalized_value": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "owner_group": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              },
+              "physical_mechanism": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              },
+              "pipeline_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "raw_value": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "scale": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "target_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "term_class": {
+                "enum": [
+                  "Base",
+                  "Surcharge"
+                ],
+                "type": "string"
+              },
+              "term_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "transaction_class": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              },
+              "transform": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              },
+              "uncertainty": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "term_id",
+              "pipeline_id",
+              "physical_mechanism",
+              "owner_group",
+              "initiator_id",
+              "target_id",
+              "transaction_class",
+              "raw_value",
+              "base_reference",
+              "transform",
+              "scale",
+              "normalized_value",
+              "component_weight",
+              "group_coefficient",
+              "term_class",
+              "load_attribution",
+              "uncertainty"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "desired_distributions": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "distribution": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "domain_id": {
+                      "$ref": "common.schema.json#/$defs/stableId"
+                    },
+                    "fraction": {
+                      "$ref": "common.schema.json#/$defs/quantity"
+                    }
+                  },
+                  "required": [
+                    "domain_id",
+                    "fraction"
+                  ],
+                  "type": "object"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "object_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              }
+            },
+            "required": [
+              "object_id",
+              "distribution"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "fidelity": {
+          "enum": [
+            "Full",
+            "NUMA",
+            "CPU",
+            "Default"
+          ],
+          "type": "string"
+        },
+        "model_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "ordered_actions": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "planner_status": {
+          "const": "Feasible"
+        },
+        "reference_mapping_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "snapshot_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "tie_key": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "total_score": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "validation_predicates": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "workload_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        }
+      },
+      "required": [
+        "planner_status",
+        "fidelity",
+        "snapshot_digest",
+        "capability_digest",
+        "catalog_digests",
+        "workload_digest",
+        "model_digest",
+        "reference_mapping_digest",
+        "assignments",
+        "desired_distributions",
+        "constraint_proofs",
+        "cost_terms",
+        "total_score",
+        "tie_key",
+        "ordered_actions",
+        "validation_predicates"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "PlacementPlan"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "PlacementPlan",
+  "type": "object"
+}

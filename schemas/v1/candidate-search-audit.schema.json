@@ -1,0 +1,150 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/candidate-search-audit.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Finite-domain exposure and bounded heuristic search audit.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "conflict_witnesses": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/finding"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "depth_budget": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "elapsed_time": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "external_exact_reference_digest": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "maximum_depth": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "neighborhood_counts": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/quantity"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "peak_memory": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "queue_audits": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "cap": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "cap_expansions": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/quantity"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "domain_exhausted": {
+                "type": "boolean"
+              },
+              "dominance_certificate_digests": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/digest"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "endpoint_identity": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "exposed_candidate_count": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "queue_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "raw_candidate_count": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "unpruned_candidate_count": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "queue_id",
+              "endpoint_identity",
+              "raw_candidate_count",
+              "unpruned_candidate_count",
+              "exposed_candidate_count",
+              "domain_exhausted",
+              "cap",
+              "cap_expansions",
+              "dominance_certificate_digests"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "search_node_budget": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "search_nodes_consumed": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "terminal_status": {
+          "enum": [
+            "Feasible",
+            "Search-Limited",
+            "Cap-Limited",
+            "Data-Incomplete",
+            "Model-Out-Of-Domain",
+            "Stale-Input"
+          ],
+          "type": "string"
+        },
+        "tie_break_trace": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        }
+      },
+      "required": [
+        "terminal_status",
+        "queue_audits",
+        "search_node_budget",
+        "search_nodes_consumed",
+        "depth_budget",
+        "maximum_depth",
+        "conflict_witnesses",
+        "neighborhood_counts",
+        "tie_break_trace",
+        "elapsed_time",
+        "peak_memory",
+        "external_exact_reference_digest"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "CandidateSearchAudit"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "CandidateSearchAudit",
+  "type": "object"
+}

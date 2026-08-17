@@ -1,0 +1,141 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/primary-analysis-record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Field-level primary conditional inference record.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "D_j": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/quantity"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "accepted_b3_b2_run_pair_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "accepted_n": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "accepted_policy_counts": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/quantity"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "adjacent_pair_counts": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/quantity"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "analysis_plan_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "assumption_diagnostics_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "attempted_policy_counts": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/quantity"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "conditional_estimand_label": {
+          "const": "ConditionalAcceptedPairMeanLogRatio_B3_over_B2"
+        },
+        "decision": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "failure_counts": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/quantity"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "mean_D": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "one_sided_p_value": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "operational_feasibility_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "planned_attempt_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "planned_n": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "reference_condition_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "standard_error": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "t_statistic": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "two_sided_interval": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/quantity"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "upper_one_sided_bound": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        }
+      },
+      "required": [
+        "analysis_plan_digest",
+        "reference_condition_id",
+        "conditional_estimand_label",
+        "planned_attempt_count",
+        "attempted_policy_counts",
+        "accepted_policy_counts",
+        "adjacent_pair_counts",
+        "failure_counts",
+        "accepted_b3_b2_run_pair_ids",
+        "D_j",
+        "planned_n",
+        "accepted_n",
+        "mean_D",
+        "standard_error",
+        "t_statistic",
+        "one_sided_p_value",
+        "upper_one_sided_bound",
+        "two_sided_interval",
+        "decision",
+        "operational_feasibility_digest",
+        "assumption_diagnostics_digest"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "PrimaryAnalysisRecord"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "PrimaryAnalysisRecord",
+  "type": "object"
+}

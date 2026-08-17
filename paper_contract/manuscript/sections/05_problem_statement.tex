@@ -1,0 +1,156 @@
+\section{System Model and Problem Statement}
+\label{sec:problem}
+
+\subsection{Target system and pipeline}
+
+The system under test (SUT) is a cache-coherent, multi-socket Linux host with at least one PCIe NIC. The platform exposes CPU-affinity and NUMA-allocation controls, and the selected packet-I/O profile exposes hardware queues, packet and descriptor memory, and queue-progress ownership. The confirmatory experiment freezes either a DPDK or AF\_XDP frontend; it does not compare the frameworks as placement policies.
+
+A finite set $\set{Q}$ contains logical request/response pipelines. The traffic contract fixes for each $q\in\set{Q}$ an RX queue $r_q\in\set{R}^{\mathrm{rx}}$ and compatible TX queue $t_q\in\set{R}^{\mathrm{tx}}$ for the duration of a matched baseline block. A request traverses RX descriptors and payload memory, an applicable polling or interrupt role, an optional event ring, a worker role and optional application state; the response traverses TX payload and descriptors before NIC transmission.
+
+The resource inventories and their cardinalities, $(r_q,t_q)$, and the flow-to-queue rule are common to $B_0$--$B_3$. A topology-agnostic reference mapping
+\begin{equation}
+ \set R_0=(\omega_0,\kappa^{\mathrm{rx}}_0,
+ \kappa^{\mathrm{tx}}_0)
+ \label{eq:reference-mapping}
+\end{equation}
+fixes queue-to-worker relations and direction-specific indices into the finite ownership catalogs defined below for $B_0$--$B_2$. The complete $B_3$ treatment may select $\omega$ and controllable catalog indices $\kappa^d$ jointly with physical placement, subject to the same resource counts, ownership cardinalities, packet semantics, and offered work. Thus an ownership change in $B_3$ is an explicit finite placement decision, not a change to workload or implementation. Secondary ablations in \cref{sec:methodology} separate this logical-mapping effect from physical topology placement.
+
+\subsection{Notation and complete placement}
+
+\Cref{tab:notation} defines the symbols used below. Calligraphic letters denote finite sets; $s$ identifies a topology snapshot and $\ell$ a workload condition. A processing unit (PU), core, NUMA node, cache domain, and PCIe root domain remain different objects even when a particular platform reports a one-to-one relationship.
+
+\begin{longtable}{@{}p{0.20\linewidth}p{0.73\linewidth}@{}}
+\caption{Notation for the topology and placement model.}\label{tab:notation}\\
+\toprule
+Symbol & Meaning \\
+\midrule
+\endfirsthead
+\toprule
+Symbol & Meaning \\
+\midrule
+\endhead
+$G_s$ & Typed attributed topology graph for snapshot $s$ \\
+$\set{Q}$ & Logical request/response pipelines \\
+$\set{R}^{d}$ & Hardware queues in direction $d\in\{\mathrm{rx},\mathrm{tx}\}$; $r_q,t_q$ are the queues fixed for $q$ \\
+$\set{M}^{d}$ & RX/TX payload-buffer pools \\
+$\set{D}^{d}$ & RX/TX descriptor-memory objects \\
+$\set{B}=\set{B}^{+}\cup\{b_\varnothing\}$, $\set{A}=\set{A}^{+}\cup\{a_\varnothing\}$ & Material event rings and application-state regions plus distinguished no-ring and no-state objects \\
+$\set{W}$, $\set{H}$, $\set{L}=\set{W}\uplus\set{H}$ & Runtime-worker roles, controllable I/O roles, and their typed disjoint union \\
+$\set{X}$, $\set{C}$, $\set{K}$, $\set{N}$ & Physical execution contexts (occupancy groups), PUs, physical-core/SMT groups, and NUMA memory domains \\
+$\nu_X(x)$ & Declared location distribution of a material memory object $x\in\operatorname{mat}(X)$, $X\in\{\set{M}^{d},\set{D}^{d},\set{B},\set{A}\}$, over $\set{N}$ \\
+$\widetilde\nu_{bjm}$, $\tau_{\mathrm{mem}}$ & Observed page-distribution vector for material object $m$ in policy/run $(b,j)$, and the dimensionless frozen B0/B1 total-variation tolerance \\
+$\lambda^d_{q\ell}$, $\lambda^B_{q\ell}$ & Direction-$d$ packet rate and event-handoff rate of $q$ in condition $\ell$ (events/s); $\lambda_{q\ell}=\lambda^{\mathrm{rx}}_{q\ell}$ is the logical request rate used for workload weighting \\
+$a^{W}_{q\ell}$ & Worker service demand of $q$ (PU-seconds/s) \\
+$a^{H,d}_{q\ell}$ & Total direction-$d$ I/O-context demand of $q$ (PU-seconds/s) \\
+$\mu^d(q),\xi^d(q)$ & Payload pool and descriptor-memory object assigned in direction $d$ \\
+$\varphi(q),\zeta(q)$ & Event ring and optional application-state region assigned to $q$ \\
+$\set P_q^d$, $\kappa^d(q)$ & Frozen finite ownership catalog for pipeline $q$ and direction $d$, and its selected catalog index \\
+$O^d(q)$, $\bar\pi^d_{qh}$ & Owner-role set and dimensionless planning share derived from $\set P_q^d[\kappa^d(q)]$; neither is a free continuous decision \\
+$\widetilde\pi^d_{qh}$ & Observed workload-dependent service share when the frontend cannot enforce an exact share \\
+$\gamma(u),\eta(x)$ & Physical execution context used by logical role $u\in\set L$ and PU used by active context $x\in\set X$ \\
+$x_{\mathrm{init}}$ & Topology-blind B0/B1 initialization context, excluded from the measured data plane \\
+$c(u)=\eta(\gamma(u))$ & Derived PU of an active logical worker or I/O role \\
+$\set R_0$ & Topology-agnostic reference worker and finite ownership-catalog mapping used by $B_0$--$B_2$ \\
+$\sigma_{mx}$ & Predeclared CPU-access demand share of execution context $x$ for material memory object $m$; shares sum to one over its actual CPU accessors \\
+$\Pi$ & Complete placement $(\mu^{\mathrm{rx}},\mu^{\mathrm{tx}},\xi^{\mathrm{rx}},\xi^{\mathrm{tx}},\varphi,\zeta,\omega,\kappa^{\mathrm{rx}},\kappa^{\mathrm{tx}},\gamma,\eta)$; $O^d$ and $\bar\pi^d$ are catalog-derived \\
+$\set{F}(G_s,\ell)$ & Placements satisfying all hard constraints \\
+$J(\Pi;G_s,\ell,\vect{\alpha},\vect{\beta})$ & Dimensionless placement score with component weights $\vect\alpha$ and group-level coefficients $\vect\beta$ \\
+$\unknown$ & Unknown attribute, distinct from a measured zero \\
+\bottomrule
+\end{longtable}
+
+Each material memory object is location-qualified. For $x\notin\{b_\varnothing,a_\varnothing\}$, the vector $\nu_X(x)\in[0,1]^{|\set N|}$ sums to one and records the intended fraction of its pages on each NUMA node; a bound-node object has a one-hot vector. The desired vector and the observed post-fault page distribution are separate records. This representation admits a deliberately interleaved object without calling it ``local'' to every accessor.
+
+The distinguished objects $b_\varnothing$ and $a_\varnothing$ have no pages and no NUMA distribution. They reserve zero bytes, slots, and service rate and contribute zero topology, synchronization, state-access, uncertainty, and reconfiguration cost. $b_\varnothing$ is eligible only when the frozen pipeline has no material producer--consumer handoff; $a_\varnothing$ is eligible only when the frozen service has no separately placed application state. Both are excluded from material capacity sums. These are formal null objects, not zero-capacity allocations that another pipeline can select.
+
+For each $q$ and direction $d$, the frontend capability profile supplies a nonempty finite ownership catalog
+\begin{equation}
+ \set P_q^d=\{p_{qdi}=(O_{qdi},\vect{\bar\pi}_{qdi},
+ m_{qdi},A_{qdi}):i\in\set I_q^d\},\qquad |\set I_q^d|<\infty,
+ \label{eq:ownership-catalog}
+\end{equation}
+where $O_{qdi}\subseteq\set H$, $\vect{\bar\pi}_{qdi}$ is an explicitly enumerated planning-share vector over that set, $m_{qdi}$ is a control-class tag, and $A_{qdi}$ is the predeclared read-back acceptance set. The three tags are \textsc{direct}, \textsc{validated-indirect}, and \textsc{observed-only}. The selected finite index $\kappa^d(q)\in\set I_q^d$ derives $O^d(q)=O_{qd\kappa^d(q)}$ and $\bar\pi^d_{qh}=\bar\pi_{qd\kappa^d(q),h}$. The catalog, its stable order, capability evidence, and digest are frozen before calibration and confirmation.
+
+The ownership cardinality $k_q^d$ is a profile invariant. If $k_q^d=0$, the catalog contains only the null entry $(\varnothing,\varnothing)$ and every corresponding placement and cost term is absent. If $k_q^d=1$, each admitted entry has exactly one owner and its only share is one. If $k_q^d>1$, the planner can enumerate only the share vectors explicitly present in \cref{eq:ownership-catalog}; it never searches a continuous simplex. A \textsc{direct} entry is requested exactly. A \textsc{validated-indirect} entry may be requested through a documented indirect control but is admitted only when independent read-back lies in $A_{qdi}$. For an \textsc{observed-only} entry, the profile freezes one externally supplied or calibration-derived planning vector $\vect{\bar\pi}_{qdi}$ and admissible observation range $A_{qdi}$; $\widetilde\pi^d_q$ is measured at run time, the applicator makes no exact-share claim, and B3 cannot vary the share. Such shares are workload-dependent observations rather than placement controls.
+
+The primary confirmatory profile uses only single-owner entries with $k_q^d=1$ and $\bar\pi^d_{qh}=1$ whenever an owner role exists. Multi-owner catalogs are secondary or replication profiles until stand qualification establishes a versioned capability record, finite catalog, and reproducible validation gate. This restriction preserves the general model while making the primary candidate space enforceable.
+
+A physical execution context $x\in\set X$ is one independently schedulable thread or equivalent controllable entity and consumes one hardware-thread slot. The map $\gamma$ relates logical roles to these physical occupants, while $\eta$ places each active occupant on one PU. Distinct roles may share $x$ only when a predeclared co-execution predicate permits them. In a run-to-completion (RTC) pipeline, the poller role $h$ and worker role $w$ are two logical roles of the same thread: $\gamma(h)=\gamma(w)$, their CPU service demands are added, and the shared context consumes exactly one slot. Its event ring is $b_\varnothing$. In a staged pipeline, its producer and worker roles satisfy $\gamma(h)\neq\gamma(w)$ and use a material event ring.
+
+For example, an RTC poller demand of $a^{H,\mathrm{rx}}_{q\ell}$ and worker demand $a^W_{q\ell}$ assigned to one $x$ consume one slot on $\eta(x)$ but contribute their sum to processing capacity. Two independent staged threads use distinct $x_h,x_w$; assigning both to one PU would consume two slots and is forbidden when the ordinary bound is one. RTC therefore never requires increasing a PU multiplicity bound, and increasing such a bound cannot be used to disguise two independent threads as one occupant.
+
+\subsection{Hard feasibility constraints}
+
+Eligibility predicates $A_X$ encode frontend capability, queue compatibility, administrative CPU sets, available memory, and isolation policy. For every $q$ and $d$, feasibility includes
+\begin{align}
+ A_{RT}[r_q,t_q]&=1, &
+ A_{QM}^{d}[q,\mu^d(q)]&=1, &
+ A_{QD}^{d}[q,\xi^d(q)]&=1, \label{eq:eligibility-a}\\
+ A_{QB}[q,\varphi(q)]&=1, &
+ A_{QA}[q,\zeta(q)]&=1, &
+ A_{QW}[q,\omega(q)]&=1, \label{eq:eligibility-b}\\
+ \kappa^d(q)&\in\set I_q^d, &
+ O^d(q)&=O_{qd\kappa^d(q)}, \label{eq:ownership-selection}\\
+ \vect{\bar\pi}^d_q&=\vect{\bar\pi}_{qd\kappa^d(q)}, &
+ |O^d(q)|&=k_q^d, \\
+ A_{QH}^{d}[q,h]&=1\quad(h\in O^d(q)), &
+ \sum_{h\in O^d(q)}\bar\pi^d_{qh}&=1,
+ \quad \bar\pi^d_{qh}\geq0\quad(k_q^d>0), \label{eq:ownership}\\
+ A_{LX}[u,\gamma(u)]&=1 &&(u\text{ active}), &
+ A_{XC}[x,\eta(x)]&=1 &&(x\text{ active}). \label{eq:execution-eligibility}
+\end{align}
+The last line applies only to active, controllable physical contexts. For distinct active logical roles $u,v$, $\gamma(u)=\gamma(v)$ additionally requires the predeclared co-execution predicate $A_{LL}[u,v]=1$; the RTC equalities and staged inequalities above are mandatory instances. Because $\gamma$ and $\eta$ are functions, every shared role and physical context has one consistent realization and PU across all pipelines.
+
+Let $U_w^W$, $U_h^H$, $U_x^X$, and $U_c^C$ be safe service capacities in PU-seconds/s; let $0<\rho_W,\rho_H,\rho_X,\rho_C<1$ be utilization guards frozen from calibration. Define the total demand of physical execution context $x$ as
+\begin{equation}
+ A_{x\ell}(\Pi)=
+ \sum_{q:\gamma(\omega(q))=x}a^W_{q\ell}
+ +\sum_d\sum_q\sum_{h\in O^d(q):\gamma(h)=x}
+ \bar\pi^d_{qh}a^{H,d}_{q\ell}.
+ \label{eq:execution-demand}
+\end{equation}
+Worker-role, I/O-role, physical-context, and PU capacities require
+\begin{align}
+ \sum_{q:\omega(q)=w} a^W_{q\ell} &\leq \rho_W U_w^W &&(w\in\set W), \label{eq:worker-capacity}\\
+ \sum_{d}\sum_{q:h\in O^d(q)}\bar\pi^d_{qh}a^{H,d}_{q\ell}
+ &\leq \rho_H U_h^H &&(h\in\set H), \label{eq:context-capacity}\\
+ A_{x\ell}(\Pi)&\leq\rho_XU_x^X &&(x\text{ active}), \label{eq:execution-capacity}\\
+ \sum_{x:\eta(x)=c}A_{x\ell}(\Pi)
+ &\leq \rho_C U_c^C &&(c\in\set C). \label{eq:pu-capacity}
+\end{align}
+Thus RTC roles sharing one $x$ occupy one slot while both terms enter $A_{x\ell}$ and the PU sum. Rates $\lambda^d_{q\ell}$ and service demands $a^W_{q\ell},a^{H,d}_{q\ell}$ are never used interchangeably: demands are measured service time per packet multiplied by the applicable directional rate, with units recorded in the calibration artifact. With direction-specific hardware-queue capacities $U_r^d$ and guard $\rho_R$,
+\begin{align}
+ \sum_{q:r_q=r}\lambda^{\mathrm{rx}}_{q\ell}&\leq\rho_R U_r^{\mathrm{rx}} &&(r\in\set R^{\mathrm{rx}}),\\
+ \sum_{q:t_q=r}\lambda^{\mathrm{tx}}_{q\ell}&\leq\rho_R U_r^{\mathrm{tx}} &&(r\in\set R^{\mathrm{tx}}).
+ \label{eq:queue-capacity}
+\end{align}
+
+For every memory-object type $Y\in\{\set M^d,\set D^d,\set B,\set A\}$, let $\operatorname{mat}(Y)$ exclude its distinguished null object when one exists. Let $b^Y_{qy}$ be the bytes reserved for $q$ when it selects material object $y$, and $K_y^Y$ the allocatable capacity. Event rings additionally have required slots $g_{qb}$, slot capacity $G_b$, sustainable event rate $U_b^B$, and guard $\rho_B$. The null-object reservations are defined as $b^B_{q b_\varnothing}=g_{q b_\varnothing}=0$ and $b^A_{q a_\varnothing}=0$. Thus
+\begin{align}
+ \sum_{q:y_q^Y=y}b^Y_{qy}&\leq K_y^Y &&(y\in\operatorname{mat}(Y)), \label{eq:memory-capacity}\\
+ \sum_{q:\varphi(q)=b}g_{qb}&\leq G_b &&(b\in\set B^+), \label{eq:ring-capacity}\\
+ \sum_{q:\varphi(q)=b}\lambda^B_{q\ell}&\leq\rho_B U_b^B &&(b\in\set B^+). \label{eq:ring-rate}
+\end{align}
+Here $y_q^Y$ denotes the relevant component of $\Pi$; shared material objects consume the sum of declared reservations rather than being counted once per identity. The null objects are not capacity-bearing resources.
+
+PU multiplicity, SMT, exclusivity, and isolation count physical occupants rather than logical roles. With active set $\set X_{\mathrm{act}}(\Pi)$, indicator $z_{xc}=\mathbf{1}[\eta(x)=c]$, physical-core group $K(c)\in\set K$, and declared bounds $L_c^X$ and $L_k^{\mathrm{SMT}}$,
+\begin{align}
+ \sum_{x\in\set X_{\mathrm{act}}(\Pi)}z_{xc}&\leq L_c^X, \label{eq:pu-multiplicity}\\
+ \sum_{c:K(c)=k}\mathbf{1}\!\left[\sum_{x\in\set X_{\mathrm{act}}(\Pi)}z_{xc}>0\right]
+ &\leq L_k^{\mathrm{SMT}} &&(k\in\set K). \label{eq:smt}
+\end{align}
+The ordinary isolated-thread profile sets $L_c^X=1$; RTC co-execution does not change it. Setting $L_k^{\mathrm{SMT}}=1$ forbids simultaneous use of sibling PUs. Reserved PUs are removed by $A_{XC}$. A declared role exclusion pair $(u,v)\in\set E_{LL}$ requires $c(u)\neq c(v)$, while an independent-thread condition requires $\gamma(u)\neq\gamma(v)$ even if controlled oversubscription is studied separately. More general isolation relations $I_Y(q,q')=1$ require distinct selected identities for resource type $Y$; $I_K(q,q')=1$ requires distinct physical-core groups. These relations cover tenant, control-plane, and experimental isolation without hiding policy in a score. Pool/ring producer--consumer compatibility and frontend-specific RX/TX ownership restrictions are represented by additional Boolean predicates and checked identically.
+
+All capacities, cardinalities, catalog-membership and control-class rules, eligibility rules, sharing rules, and isolation relations are part of $\set F(G_s,\ell)$. A requested placement is rejected if any condition fails. For indirect and observed-only ownership, the applicable post-application acceptance set is a run gate rather than an assertion that the planned share was exactly imposed. No finite cost makes an infeasible placement admissible.
+
+\subsection{Optimization problem and scope}
+
+For a fixed topology snapshot, frontend profile, workload condition, and frozen model artifact, the specification is
+\begin{equation}
+ \Pi^\star\in\arg\min_{\Pi\in\set F(G_s,\ell)}
+ J(\Pi;G_s,\ell,\vect\alpha,\vect\beta).
+ \label{eq:optimization}
+\end{equation}
+The exact minimum defines the comparison target; it does not imply that the heuristic in \cref{sec:algorithm} finds it. Static attributes include containment, PCIe ancestry, CPU sets, NUMA associations, and unloaded calibrated paths. Workload-dependent attributes include rates, service demands, resource utilization, and contention estimates from a preceding calibration or observation interval. Measurements from a response interval are never used retroactively to choose that interval's placement.
+
+The primary observable is p99.9 external turnaround latency. $J$ is a relative planning score whose ranking must be validated on held-out placements, not a claim of analytical tail-latency prediction. The model excludes transport redesign, NIC firmware changes, failure recovery, and application-state partitioning beyond declared $\set A$ objects. Such requirements may restrict $\set F$ but are not optimized here.

@@ -1,0 +1,97 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/telemetry-record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Scoped raw/extended counter sample and quality evidence.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "counter_width": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "enabled_time": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "event_encoding": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "event_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "extended_value": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "multiplexing_ratio": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "phase_record_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "quality": {
+          "enum": [
+            "Valid",
+            "Event-Unavailable",
+            "Wrap-Ambiguous",
+            "Multiplexing-Gate-Failed",
+            "Attribution-Mismatch",
+            "Interval-Missing"
+          ],
+          "type": "string"
+        },
+        "raw_value": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "reset_status": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "run_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "running_time": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "sample_time": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "scope_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "wrap_status": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        }
+      },
+      "required": [
+        "run_id",
+        "phase_record_id",
+        "event_id",
+        "event_encoding",
+        "scope_id",
+        "raw_value",
+        "extended_value",
+        "sample_time",
+        "enabled_time",
+        "running_time",
+        "counter_width",
+        "wrap_status",
+        "reset_status",
+        "multiplexing_ratio",
+        "quality"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "TelemetryRecord"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "TelemetryRecord",
+  "type": "object"
+}

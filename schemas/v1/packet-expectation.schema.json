@@ -1,0 +1,57 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/packet-expectation.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One immutable expected packet identity.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "expected_sequence_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "flow_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "intended_queue_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "request_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "run_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "sequence_manifest_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "transmit_order_index": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        }
+      },
+      "required": [
+        "run_id",
+        "expected_sequence_id",
+        "transmit_order_index",
+        "request_id",
+        "flow_id",
+        "intended_queue_id",
+        "sequence_manifest_digest"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "PacketExpectation"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "PacketExpectation",
+  "type": "object"
+}

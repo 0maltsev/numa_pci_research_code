@@ -1,0 +1,101 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/cost-term-value.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Term-ledger-owned normalized score contribution.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "base_reference": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "component_weight": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "group_coefficient": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "initiator_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "load_attribution": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "normalized_value": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "owner_group": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "physical_mechanism": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "pipeline_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "raw_value": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "scale": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "target_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "term_class": {
+          "enum": [
+            "Base",
+            "Surcharge"
+          ],
+          "type": "string"
+        },
+        "term_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "transaction_class": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "transform": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "uncertainty": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        }
+      },
+      "required": [
+        "term_id",
+        "pipeline_id",
+        "physical_mechanism",
+        "owner_group",
+        "initiator_id",
+        "target_id",
+        "transaction_class",
+        "raw_value",
+        "base_reference",
+        "transform",
+        "scale",
+        "normalized_value",
+        "component_weight",
+        "group_coefficient",
+        "term_class",
+        "load_attribution",
+        "uncertainty"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "CostTermValue"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "CostTermValue",
+  "type": "object"
+}

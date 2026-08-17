@@ -1,0 +1,97 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/ring-record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Event-ring progress, lapping, and explicit no-handoff record.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "capacity_bytes": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "capacity_slots": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "consumer_extended_sequence": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "consumer_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "drain_equal": {
+          "type": "boolean"
+        },
+        "generation": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "handoff_event_digest": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "high_water": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "lapping_detected": {
+          "type": "boolean"
+        },
+        "null_marker": {
+          "type": "boolean"
+        },
+        "occupancy": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "producer_extended_sequence": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "producer_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "ring_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "run_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        }
+      },
+      "required": [
+        "run_id",
+        "ring_id",
+        "null_marker",
+        "capacity_slots",
+        "capacity_bytes",
+        "producer_ids",
+        "consumer_ids",
+        "producer_extended_sequence",
+        "consumer_extended_sequence",
+        "occupancy",
+        "high_water",
+        "generation",
+        "handoff_event_digest",
+        "lapping_detected",
+        "drain_equal"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "RingRecord"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "RingRecord",
+  "type": "object"
+}

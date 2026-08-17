@@ -1,0 +1,106 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/analysis-plan.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Frozen confirmatory and secondary analysis protocol.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "attempt_indicator_definition": {
+          "const": "A_bj_is_one_only_after_all_applicable_performance_blind_attempt_gates_pass"
+        },
+        "attrition_reporting": {
+          "const": "MandatoryPolicyAndAdjacentPairDenominatorsAndCategories"
+        },
+        "attrition_sensitivity": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "exploratory_labels": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "failed_latency_imputation": {
+          "const": false
+        },
+        "fixed_attempt_schedule_digest": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "key_secondary_family": {
+          "const": "RQ1_RQ2_Holm"
+        },
+        "outcome_dependent_reruns": {
+          "const": false
+        },
+        "pair_indicator_definitions": {
+          "additionalProperties": false,
+          "properties": {
+            "A_1_0": {
+              "const": "A_B1j*A_B0j*E_mem_j"
+            },
+            "A_2_1": {
+              "const": "A_B2j*A_B1j"
+            },
+            "A_3_2": {
+              "const": "A_B3j*A_B2j"
+            }
+          },
+          "required": [
+            "A_1_0",
+            "A_2_1",
+            "A_3_2"
+          ],
+          "type": "object"
+        },
+        "primary_estimand": {
+          "const": "E[log(Y_B3/Y_B2)|A_3_2=1,scheduled_at_l_star]"
+        },
+        "primary_test": {
+          "const": "OneSidedPairedTWeakConditionalMeanNullAlpha0.05"
+        },
+        "quantile_rule": {
+          "const": "NearestRankNoInterpolation"
+        },
+        "reference_condition": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "reference_condition_selection_rule": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        }
+      },
+      "required": [
+        "reference_condition",
+        "reference_condition_selection_rule",
+        "attempt_indicator_definition",
+        "pair_indicator_definitions",
+        "primary_estimand",
+        "primary_test",
+        "quantile_rule",
+        "fixed_attempt_schedule_digest",
+        "attrition_reporting",
+        "attrition_sensitivity",
+        "failed_latency_imputation",
+        "outcome_dependent_reruns",
+        "key_secondary_family",
+        "exploratory_labels"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "AnalysisPlan"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "AnalysisPlan",
+  "type": "object"
+}

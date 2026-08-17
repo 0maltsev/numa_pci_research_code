@@ -1,0 +1,773 @@
+{
+  "meta": {
+    "artifact_class": "Protocol",
+    "campaign_or_stage_id": "stage:milestone-1",
+    "canonical_digest": "sha256:faeabf6cdb5232dcac13791a1e7ede435730e836c1a49c8c2733f8620fd1377c",
+    "created_at": {
+      "clock_domain": "UTC",
+      "value": "2026-08-17T13:40:05Z"
+    },
+    "data_classification": "ProtocolDefinition",
+    "errors": [],
+    "input_digests": [
+      "sha256:9b685e095d175df898080c15b9929642c0ab5c860fdbab463d102fa0558fc409",
+      "sha256:802a2053ab8c3c0f6f8bd803668ddaa24455cc1ae3721bc0d83f8594c113205e",
+      "sha256:67ecff1220cb949abafb50f89daf0d0f7e050bd5cb7a579360dee81c83d8f4fd",
+      "sha256:c5877e26e2f28271473681ee3ce51961469149cd5c6ee0404ce5673031c9f565",
+      "sha256:720414761fa65e7a616e59f64621857faf8d38d757964e8b82442be1765139bb",
+      "sha256:d38c3284590f4e7f8fd8f56abf166115919786e983f2c8b73dd437ef9e81b8ac",
+      "sha256:782c3ca3912ab346db99e9ad0e5024e270d551ddc64b805a4cd414cd1516a553",
+      "sha256:31e3ae3dd23369593e61aadb1b887cd53a190968b0854977364128736dede94b",
+      "sha256:25e69d112f669bdfb4015fa9ddda0caee293cea6888b7a01a90eb7ca47784b32"
+    ],
+    "producer": {
+      "identity": "tool:milestone1-protocol-freezer",
+      "version": "1.0.0"
+    },
+    "provenance": {
+      "raw_records_immutable": true,
+      "source_digests": [
+        "sha256:9b685e095d175df898080c15b9929642c0ab5c860fdbab463d102fa0558fc409",
+        "sha256:802a2053ab8c3c0f6f8bd803668ddaa24455cc1ae3721bc0d83f8594c113205e",
+        "sha256:67ecff1220cb949abafb50f89daf0d0f7e050bd5cb7a579360dee81c83d8f4fd",
+        "sha256:c5877e26e2f28271473681ee3ce51961469149cd5c6ee0404ce5673031c9f565",
+        "sha256:720414761fa65e7a616e59f64621857faf8d38d757964e8b82442be1765139bb",
+        "sha256:d38c3284590f4e7f8fd8f56abf166115919786e983f2c8b73dd437ef9e81b8ac",
+        "sha256:782c3ca3912ab346db99e9ad0e5024e270d551ddc64b805a4cd414cd1516a553",
+        "sha256:31e3ae3dd23369593e61aadb1b887cd53a190968b0854977364128736dede94b",
+        "sha256:25e69d112f669bdfb4015fa9ddda0caee293cea6888b7a01a90eb7ca47784b32"
+      ],
+      "source_record_ids": [],
+      "transformation": "faithful typed transcription of PRE_IMPLEMENTATION_DECISIONS.md"
+    },
+    "record_id": "decision:gate-ledger-v1",
+    "schema_version": "1.0.0",
+    "scientific_disposition": "NotMeasurement",
+    "status": {
+      "code": "Milestone1-Frozen",
+      "detail": "Milestone 1 protocol definition; not measurement data",
+      "kind": "Success"
+    },
+    "validity_domain": {
+      "definition": "Scientific protocol and schema version 1.0.0 only",
+      "evidence_digests": [
+        "sha256:9b685e095d175df898080c15b9929642c0ab5c860fdbab463d102fa0558fc409",
+        "sha256:802a2053ab8c3c0f6f8bd803668ddaa24455cc1ae3721bc0d83f8594c113205e",
+        "sha256:67ecff1220cb949abafb50f89daf0d0f7e050bd5cb7a579360dee81c83d8f4fd",
+        "sha256:c5877e26e2f28271473681ee3ce51961469149cd5c6ee0404ce5673031c9f565",
+        "sha256:720414761fa65e7a616e59f64621857faf8d38d757964e8b82442be1765139bb",
+        "sha256:d38c3284590f4e7f8fd8f56abf166115919786e983f2c8b73dd437ef9e81b8ac",
+        "sha256:782c3ca3912ab346db99e9ad0e5024e270d551ddc64b805a4cd414cd1516a553",
+        "sha256:31e3ae3dd23369593e61aadb1b887cd53a190968b0854977364128736dede94b",
+        "sha256:25e69d112f669bdfb4015fa9ddda0caee293cea6888b7a01a90eb7ca47784b32"
+      ],
+      "state": "Known"
+    }
+  },
+  "payload": {
+    "allowed_states": [
+      "Frozen",
+      "PendingQualification",
+      "BlockedOnTestbed",
+      "UnresolvedScientificDecision",
+      "Unsupported",
+      "NotApplicable"
+    ],
+    "frozen_decision_ids": [
+      "D03",
+      "D11",
+      "D12",
+      "D21",
+      "D23"
+    ],
+    "gates": [
+      {
+        "affected_components": [
+          "capability-profile",
+          "frontend",
+          "pools",
+          "queues",
+          "applicator",
+          "validator",
+          "planner"
+        ],
+        "allowed_options": [
+          "DPDK",
+          "AF_XDP"
+        ],
+        "decision": "Primary packet-I/O frontend",
+        "decision_id": "D01",
+        "evidence_digests": [],
+        "freeze_point": "Before stand integration plan acceptance",
+        "recommended_default": {
+          "state": "Known",
+          "value": "First profile passing every control, read-back, timestamp-volume, and invariant-path gate"
+        },
+        "reopen_conditions": "Mandatory capability failure or driver/kernel/profile revision",
+        "resolved_value": {
+          "reason": "D01 is unresolved in state PendingQualification; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Off-stand capability audit and stand qualification without latency comparison",
+        "state": "PendingQualification"
+      },
+      {
+        "affected_components": [
+          "pipeline-manifest",
+          "role-context-model",
+          "ring",
+          "worker",
+          "planner"
+        ],
+        "allowed_options": [
+          "RunToCompletion",
+          "Staged"
+        ],
+        "decision": "Primary pipeline",
+        "decision_id": "D02",
+        "evidence_digests": [],
+        "freeze_point": "Before frontend integration",
+        "recommended_default": {
+          "state": "Known",
+          "value": "RTC only when the frozen service requires no material handoff"
+        },
+        "reopen_conditions": "Service semantics or correctness/capacity gates require a handoff",
+        "resolved_value": {
+          "reason": "D02 is unresolved in state PendingQualification; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Functional semantics, slot accounting, service operation, and invariant-path evidence",
+        "state": "PendingQualification"
+      },
+      {
+        "affected_components": [
+          "ownership-catalog",
+          "planner",
+          "applicator",
+          "validator",
+          "baselines"
+        ],
+        "allowed_options": [
+          "SingleOwner",
+          "QualifiedFiniteSharedOwnerSecondaryOnly"
+        ],
+        "decision": "Primary ownership mode",
+        "decision_id": "D03",
+        "evidence_digests": [],
+        "freeze_point": "Before off-stand schemas and planner tests",
+        "recommended_default": {
+          "state": "Known",
+          "value": "SingleOwner"
+        },
+        "reopen_conditions": "Prospective versioned secondary or replication protocol after D20; never confirmatory outcomes",
+        "resolved_value": {
+          "state": "Known",
+          "value": [
+            "mode=SingleOwner",
+            "owner_cardinality=1",
+            "share=1",
+            "scope=every-controllable-non-null-direction"
+          ]
+        },
+        "selection_evidence": "Frozen scientific contract D03",
+        "state": "Frozen"
+      },
+      {
+        "affected_components": [
+          "traffic-generator",
+          "timestamp-backend",
+          "oracle",
+          "analysis"
+        ],
+        "allowed_options": [
+          "ExternalSingleClockInstrument",
+          "SameTgNicHardwareTxRx",
+          "BoundedTgSoftwareDiagnostic",
+          "Unsupported"
+        ],
+        "decision": "Timestamping tier",
+        "decision_id": "D04",
+        "evidence_digests": [],
+        "freeze_point": "Before calibration timing data",
+        "recommended_default": {
+          "state": "Known",
+          "value": "Highest qualified tier in the declared decision-tree order"
+        },
+        "reopen_conditions": "Clock, NIC, firmware, or rate validity domain changes",
+        "resolved_value": {
+          "reason": "D04 is unresolved in state BlockedOnTestbed; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Clock identity, boundary, capacity, loss, resolution, bias, drift, and overhead qualification",
+        "state": "BlockedOnTestbed"
+      },
+      {
+        "affected_components": [
+          "environment",
+          "traffic-generator",
+          "timestamp-path",
+          "validity-domain"
+        ],
+        "allowed_options": [
+          "DirectIsolatedLink",
+          "InvariantQualifiedSwitchPath"
+        ],
+        "decision": "Direct-link or switched topology",
+        "decision_id": "D05",
+        "evidence_digests": [],
+        "freeze_point": "Before stand campaign definition",
+        "recommended_default": {
+          "state": "Known",
+          "value": "DirectIsolatedLink"
+        },
+        "reopen_conditions": "Cabling or path change",
+        "resolved_value": {
+          "reason": "D05 is unresolved in state BlockedOnTestbed; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Physical availability, isolation, QoS visibility, and reproducible-path evidence",
+        "state": "BlockedOnTestbed"
+      },
+      {
+        "affected_components": [
+          "page-initializer",
+          "pool-manager",
+          "observed-validator",
+          "b0-b1-gate"
+        ],
+        "allowed_options": [
+          "CompletePageInventory",
+          "ValidatedBoundedCoverage",
+          "Unsupported"
+        ],
+        "decision": "Page-location verification mechanism",
+        "decision_id": "D06",
+        "evidence_digests": [],
+        "freeze_point": "Before baseline integration",
+        "recommended_default": {
+          "state": "Known",
+          "value": "CompletePageInventory when privilege and page type permit"
+        },
+        "reopen_conditions": "Kernel, page type, privilege, or coverage changes",
+        "resolved_value": {
+          "reason": "D06 is unresolved in state BlockedOnTestbed; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Coverage, classification accuracy, perturbation, resolution, and repeatability",
+        "state": "BlockedOnTestbed"
+      },
+      {
+        "affected_components": [
+          "inspector",
+          "graph",
+          "frontend",
+          "planner",
+          "environment"
+        ],
+        "allowed_options": [
+          "AnyQualifiedUniquelyResolvedPortBdf"
+        ],
+        "decision": "Primary NIC port and PCI BDF",
+        "decision_id": "D07",
+        "evidence_digests": [],
+        "freeze_point": "Before topology and frontend freeze",
+        "recommended_default": {
+          "state": "Known",
+          "value": "Port with complete ancestry and required control/read-back"
+        },
+        "reopen_conditions": "Port, function, driver, firmware, link, or boot identity changes",
+        "resolved_value": {
+          "reason": "D07 is unresolved in state BlockedOnTestbed; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Topology, driver join, link, queue, counter, and timestamp qualification",
+        "state": "BlockedOnTestbed"
+      },
+      {
+        "affected_components": [
+          "pools",
+          "descriptors",
+          "page-initializer",
+          "environment"
+        ],
+        "allowed_options": [
+          "QualifiedFrontendPageSize",
+          "QualifiedUmemOrdinaryPages",
+          "Unsupported"
+        ],
+        "decision": "Huge-page sizes and allocation source",
+        "decision_id": "D08",
+        "evidence_digests": [],
+        "freeze_point": "Before pool-manager integration",
+        "recommended_default": {
+          "state": "Known",
+          "value": "One qualified size/source common to all baselines"
+        },
+        "reopen_conditions": "Capacity, frontend, or page-verification change",
+        "resolved_value": {
+          "reason": "D08 is unresolved in state BlockedOnTestbed; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Inventory, allocation, placement observability, capacity, and frontend compatibility",
+        "state": "BlockedOnTestbed"
+      },
+      {
+        "affected_components": [
+          "frontend",
+          "ownership",
+          "affinity",
+          "telemetry"
+        ],
+        "allowed_options": [
+          "UserspaceBusyPolling",
+          "QualifiedInterrupt",
+          "FrontendSpecificHybridSeparateProfile"
+        ],
+        "decision": "Interrupt or polling mode",
+        "decision_id": "D09",
+        "evidence_digests": [],
+        "freeze_point": "Before frontend profile freeze",
+        "recommended_default": {
+          "state": "Known",
+          "value": "Busy polling for DPDK; one qualified invariant mode for AF_XDP"
+        },
+        "reopen_conditions": "Frontend cannot preserve mode or a replication profile is declared",
+        "resolved_value": {
+          "reason": "D09 is unresolved in state PendingQualification; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Frontend semantics, owner visibility, wakeup, CPU cost, and invariant-path proof",
+        "state": "PendingQualification"
+      },
+      {
+        "affected_components": [
+          "telemetry",
+          "calibrator",
+          "rq5",
+          "validity-domain"
+        ],
+        "allowed_options": [
+          "ValidatedMandatorySet",
+          "OptionalExplanatorySet",
+          "Unavailable"
+        ],
+        "decision": "Hardware-counter availability",
+        "decision_id": "D10",
+        "evidence_digests": [],
+        "freeze_point": "Before calibration design freeze",
+        "recommended_default": {
+          "state": "Known",
+          "value": "Optional unless a frozen RQ5 contrast requires the event"
+        },
+        "reopen_conditions": "CPU, NIC, firmware, kernel, or event definition changes",
+        "resolved_value": {
+          "reason": "D10 is unresolved in state BlockedOnTestbed; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Event audit, scope, sign/scaling, multiplexing, and attribution probes",
+        "state": "BlockedOnTestbed"
+      },
+      {
+        "affected_components": [
+          "timestamp-backend",
+          "oracle",
+          "aggregator",
+          "statistics"
+        ],
+        "allowed_options": [
+          "RawTimestampNearestRank",
+          "BoundedResolutionHistogramInterval"
+        ],
+        "decision": "Exact quantile representation",
+        "decision_id": "D11",
+        "evidence_digests": [],
+        "freeze_point": "Before off-stand analysis implementation",
+        "recommended_default": {
+          "state": "Known",
+          "value": "RawTimestampNearestRank"
+        },
+        "reopen_conditions": "Prospective versioned protocol revision only",
+        "resolved_value": {
+          "state": "Known",
+          "value": [
+            "estimator=NearestRank",
+            "index=max(1,ceil(p*N))",
+            "one-indexed=true",
+            "interpolation=false",
+            "p0=minimum",
+            "p1=maximum",
+            "p99.99=exploratory"
+          ]
+        },
+        "selection_evidence": "Frozen scientific contract D11",
+        "state": "Frozen"
+      },
+      {
+        "affected_components": [
+          "calibration-dataset",
+          "calibration-model",
+          "planner",
+          "statistics"
+        ],
+        "allowed_options": [
+          "SpecifiedCompleteRunNonnegativeRidgeOnly"
+        ],
+        "decision": "Calibration estimator",
+        "decision_id": "D12",
+        "evidence_digests": [],
+        "freeze_point": "Before off-stand calibration implementation",
+        "recommended_default": {
+          "state": "Known",
+          "value": "SpecifiedCompleteRunNonnegativeRidgeOnly"
+        },
+        "reopen_conditions": "Prospective scientific revision before confirmatory data with new validation/version",
+        "resolved_value": {
+          "state": "Known",
+          "value": [
+            "unit=complete-accepted-run",
+            "response=log-nearest-rank-p99.9",
+            "coefficients=nonnegative",
+            "condition-intercepts=unpenalized-fit-only",
+            "global-intercept=none",
+            "lambda-grid=finite-positive",
+            "folds=condition-stratified-placement-relation-blocked",
+            "minimum-independent-relations-per-cv-condition=2",
+            "validation-condition-must-occur-in-training=true",
+            "lambda-rule=minimum-fold-size-weighted-mse-larger-lambda-exact-tie",
+            "confirmatory-data-used=false"
+          ]
+        },
+        "selection_evidence": "Frozen scientific contract D12",
+        "state": "Frozen"
+      },
+      {
+        "affected_components": [
+          "exact-solver",
+          "planner-quality-analysis",
+          "artifacts"
+        ],
+        "allowed_options": [
+          "FinitePipelinesCartesianMemoryAndWallTimeLimits"
+        ],
+        "decision": "Exact-small resource budget",
+        "decision_id": "D13",
+        "evidence_digests": [],
+        "freeze_point": "Before exact-small campaign freeze",
+        "recommended_default": {
+          "state": "Known",
+          "value": "Largest limits completing reliably under frozen off-stand benchmark rule"
+        },
+        "reopen_conditions": "Implementation platform or candidate schema changes; never infer infeasibility after budget exceedance",
+        "resolved_value": {
+          "reason": "D13 is unresolved in state PendingQualification; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Completion time and memory on manual/captured fixtures without heuristic outputs",
+        "state": "PendingQualification"
+      },
+      {
+        "affected_components": [
+          "traffic-generator",
+          "workload-matrix",
+          "power",
+          "primary-analysis"
+        ],
+        "allowed_options": [
+          "CellsPassingFrozenSelectionRule"
+        ],
+        "decision": "Primary reference workload l-star",
+        "decision_id": "D14",
+        "evidence_digests": [],
+        "freeze_point": "Before confirmatory campaign and unblinding",
+        "recommended_default": {
+          "state": "Known",
+          "value": "Lexicographically first qualifying cell"
+        },
+        "reopen_conditions": "Frozen condition infeasible before acquisition; new campaign required",
+        "resolved_value": {
+          "reason": "D14 is unresolved in state BlockedOnTestbed; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Performance-blind feasibility, fidelity, capacity, and RSS occupancy",
+        "state": "BlockedOnTestbed"
+      },
+      {
+        "affected_components": [
+          "power",
+          "timestamp-gate",
+          "attempt-schedule"
+        ],
+        "allowed_options": [
+          "PositiveRelativeReductionFromTargetLatencyBudget"
+        ],
+        "decision": "Smallest scientifically relevant effect",
+        "decision_id": "D15",
+        "evidence_digests": [],
+        "freeze_point": "Before pilot power calculation",
+        "recommended_default": {
+          "reason": "No numerical default is scientifically admissible",
+          "state": "Unknown"
+        },
+        "reopen_conditions": "Target service contract changes before confirmation",
+        "resolved_value": {
+          "reason": "D15 is unresolved in state UnresolvedScientificDecision; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Application/service latency budget and measurement capability, not observed policy effects",
+        "state": "UnresolvedScientificDecision"
+      },
+      {
+        "affected_components": [
+          "orchestrator",
+          "telemetry",
+          "acceptance"
+        ],
+        "allowed_options": [
+          "FixedDurationsAndFrozenStabilityEnvelopes"
+        ],
+        "decision": "Warm-up and cooldown gates",
+        "decision_id": "D16",
+        "evidence_digests": [],
+        "freeze_point": "Before confirmatory attempt schedule",
+        "recommended_default": {
+          "state": "Known",
+          "value": "Longest performance-blind stabilization bound plus fixed environmental cooldown"
+        },
+        "reopen_conditions": "Hardware, power, or workload-domain changes",
+        "resolved_value": {
+          "reason": "D16 is unresolved in state BlockedOnTestbed; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Pilot repeatability of throughput, frequency, temperature, and occupancy",
+        "state": "BlockedOnTestbed"
+      },
+      {
+        "affected_components": [
+          "page-initializer",
+          "observed-validator",
+          "rq1-acceptance"
+        ],
+        "allowed_options": [
+          "NonnegativeThresholdSupportedByQualifiedObservationMethod"
+        ],
+        "decision": "Accepted page-distribution tolerance tau_mem",
+        "decision_id": "D17",
+        "evidence_digests": [],
+        "freeze_point": "Before confirmatory B0/B1 pairing",
+        "recommended_default": {
+          "state": "Known",
+          "value": "Smallest threshold consistent with resolution and repeated invariant initialization"
+        },
+        "reopen_conditions": "Page size, allocator, mechanism, kernel, or initialization protocol changes",
+        "resolved_value": {
+          "reason": "D17 is unresolved in state BlockedOnTestbed; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Performance-blind repeated B0/B1 initializer observations and coverage",
+        "state": "BlockedOnTestbed"
+      },
+      {
+        "affected_components": [
+          "oracle",
+          "orchestrator",
+          "validator",
+          "telemetry",
+          "statistics"
+        ],
+        "allowed_options": [
+          "ZeroLogicalFailuresPlusQualifiedMeasurementTolerances"
+        ],
+        "decision": "Correctness thresholds",
+        "decision_id": "D18",
+        "evidence_digests": [],
+        "freeze_point": "Before calibration data admission then unchanged for confirmation",
+        "recommended_default": {
+          "state": "Known",
+          "value": "Zero corruption ambiguity and duplicates; resolution-based measurement tolerances"
+        },
+        "reopen_conditions": "Packet semantics or measurement backend changes before campaign freeze",
+        "resolved_value": {
+          "reason": "D18 is unresolved in state PendingQualification; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Protocol semantics, fault injection, and performance-blind resolution pilots",
+        "state": "PendingQualification"
+      },
+      {
+        "affected_components": [
+          "model-artifact",
+          "planner",
+          "rq4",
+          "rq6"
+        ],
+        "allowed_options": [
+          "QualifiedCoveredSubset"
+        ],
+        "decision": "Primary cost-model validity domain",
+        "decision_id": "D19",
+        "evidence_digests": [],
+        "freeze_point": "Before B3 confirmatory planning",
+        "recommended_default": {
+          "state": "Known",
+          "value": "Smallest domain containing l-star and planned primary B3 candidates"
+        },
+        "reopen_conditions": "Defining topology, frontend, workload, power, or clock leaves the domain",
+        "resolved_value": {
+          "reason": "D19 is unresolved in state BlockedOnTestbed; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Coverage, no-extrapolation checks, and held-out admission metrics",
+        "state": "BlockedOnTestbed"
+      },
+      {
+        "affected_components": [
+          "capability-profile",
+          "ownership-catalog",
+          "applicator",
+          "validator",
+          "ablations"
+        ],
+        "allowed_options": [
+          "DirectFiniteEntries",
+          "ValidatedIndirectFiniteEntries",
+          "ObservedOnlyFrozenStrata",
+          "Unsupported"
+        ],
+        "decision": "Shared-ownership capability gate",
+        "decision_id": "D20",
+        "evidence_digests": [],
+        "freeze_point": "Before shared-owner calibration or replication",
+        "recommended_default": {
+          "state": "Known",
+          "value": "Secondary or replication only"
+        },
+        "reopen_conditions": "Capability or workload share behavior changes; never favorable latency",
+        "resolved_value": {
+          "reason": "D20 is unresolved in state PendingQualification; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Finite-catalog completeness, stable identities, estimator resolution, repeatability, and coverage",
+        "state": "PendingQualification"
+      },
+      {
+        "affected_components": [
+          "page-initializer",
+          "b0",
+          "b1",
+          "run-protocol"
+        ],
+        "allowed_options": [
+          "StableTopologyBlindIdentifierRule"
+        ],
+        "decision": "B0/B1 initialization CPU rule",
+        "decision_id": "D21",
+        "evidence_digests": [],
+        "freeze_point": "Before off-stand orchestrator/page-initializer implementation",
+        "recommended_default": {
+          "state": "Known",
+          "value": "SmallestStableOsCpuIdentifierAfterFunctionalExclusions"
+        },
+        "reopen_conditions": "Only functional unusability; replacement remains topology blind and starts a new campaign",
+        "resolved_value": {
+          "state": "Known",
+          "value": [
+            "rule=smallest-stable-os-cpu-identifier-in-initialization-cpuset-after-functional-exclusions",
+            "topology-blind=true",
+            "initializer-is-not-data-plane-role=true",
+            "faulting-before-data-plane-affinity=true",
+            "forbidden-inputs=nic-bdf,pcie-ancestry,numa-distance,page-location,cost-model,latency"
+          ]
+        },
+        "selection_evidence": "Frozen scientific contract D21",
+        "state": "Frozen"
+      },
+      {
+        "affected_components": [
+          "calibration-dataset",
+          "calibrator",
+          "model-artifact",
+          "b3-admission"
+        ],
+        "allowed_options": [
+          "FrozenGridFoldsRankAndValidationLimitsFollowingSpecifiedProcedures"
+        ],
+        "decision": "Calibration design and rank admission limits",
+        "decision_id": "D22",
+        "evidence_digests": [],
+        "freeze_point": "Before held-out calibration outcomes are revealed",
+        "recommended_default": {
+          "state": "Known",
+          "value": "Procedures are fixed; numerical limits have no default"
+        },
+        "reopen_conditions": "Feature schema, relation definition, coverage, or solver changes before confirmation",
+        "resolved_value": {
+          "reason": "D22 is unresolved in state PendingQualification; no stand-dependent value is supplied",
+          "state": "Unknown"
+        },
+        "selection_evidence": "Solver precision, timing resolution, replicate noise, margins, coverage, and validity domain",
+        "state": "PendingQualification"
+      },
+      {
+        "affected_components": [
+          "acceptance-records",
+          "pair-aggregator",
+          "orchestrator",
+          "statistical-analysis",
+          "planned-tables"
+        ],
+        "allowed_options": [
+          "ConditionalAcceptedPairPrimaryWithMandatoryAttritionReport"
+        ],
+        "decision": "Conditional estimand and attrition policy",
+        "decision_id": "D23",
+        "evidence_digests": [],
+        "freeze_point": "Before off-stand analysis schemas and fixtures",
+        "recommended_default": {
+          "state": "Known",
+          "value": "No weighting or bounding unless fully frozen before unblinding"
+        },
+        "reopen_conditions": "Prospective protocol revision before confirmatory acquisition only",
+        "resolved_value": {
+          "state": "Known",
+          "value": [
+            "primary-contrast=B3/B2",
+            "estimand=conditional-accepted-pair-mean-log-ratio",
+            "test=one-sided-paired-t-weak-conditional-mean-null",
+            "accepted-run-pairs-are-repetitions=true",
+            "packets-are-repetitions=false",
+            "rerun=false",
+            "neighbor-substitution=false",
+            "failed-latency-imputation=false",
+            "policy-and-pair-denominators=mandatory",
+            "failure-categories=mandatory",
+            "differential-attrition=mandatory-interpretation-limit"
+          ]
+        },
+        "selection_evidence": "Frozen scientific contract D23",
+        "state": "Frozen"
+      }
+    ],
+    "ledger_version": "1.0.0",
+    "unresolved_decision_ids": [
+      "D01",
+      "D02",
+      "D04",
+      "D05",
+      "D06",
+      "D07",
+      "D08",
+      "D09",
+      "D10",
+      "D13",
+      "D14",
+      "D15",
+      "D16",
+      "D17",
+      "D18",
+      "D19",
+      "D20",
+      "D22"
+    ]
+  },
+  "record_type": "DecisionGateLedger"
+}

@@ -1,0 +1,92 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/raw-topology-observation.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Raw, inference-free topology fact capture.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "access_result": {
+          "enum": [
+            "Success",
+            "Source-Inaccessible",
+            "Host-Changed",
+            "Device-Disappeared",
+            "Partial-Collection"
+          ],
+          "type": "string"
+        },
+        "boot_identity": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "collection_end": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "collection_epoch_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "collection_start": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "host_identity": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "provenance_class": {
+          "const": "Discovered"
+        },
+        "raw_capture_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "raw_quantity": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "raw_value": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "source_class": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "source_uri": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "warnings": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        }
+      },
+      "required": [
+        "collection_epoch_id",
+        "host_identity",
+        "boot_identity",
+        "source_uri",
+        "source_class",
+        "raw_capture_digest",
+        "raw_value",
+        "raw_quantity",
+        "provenance_class",
+        "collection_start",
+        "collection_end",
+        "access_result",
+        "warnings"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "RawTopologyObservation"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "RawTopologyObservation",
+  "type": "object"
+}

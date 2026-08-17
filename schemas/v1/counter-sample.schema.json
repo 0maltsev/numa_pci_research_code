@@ -1,0 +1,81 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/counter-sample.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Field-level raw/extended scoped counter sample.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "counter_width": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "enabled_time": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "event_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "extended_value": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "quality_flag": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "raw_value": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "run_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "running_time": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "sample_clock_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "sample_time": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "scope_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "source_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "wrap_reset_indicator": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        }
+      },
+      "required": [
+        "run_id",
+        "source_id",
+        "event_id",
+        "scope_id",
+        "raw_value",
+        "extended_value",
+        "sample_clock_id",
+        "sample_time",
+        "enabled_time",
+        "running_time",
+        "counter_width",
+        "wrap_reset_indicator",
+        "quality_flag"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "CounterSample"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "CounterSample",
+  "type": "object"
+}

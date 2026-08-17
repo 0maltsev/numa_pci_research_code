@@ -1,0 +1,111 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/sequence-manifest.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Receive-independent exact expected sequence-set commitment.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "block_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "commitment_time": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "encoding": {
+          "enum": [
+            "ExplicitSet",
+            "DeterministicRule"
+          ],
+          "type": "string"
+        },
+        "exact_sequence_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "expected_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "generator_rule": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "packet_schema_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "receive_state_input_used": {
+          "const": false
+        },
+        "request_flow_bindings": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "flow_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "request_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "sequence_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              }
+            },
+            "required": [
+              "sequence_id",
+              "request_id",
+              "flow_id"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "run_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "trace_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "transmit_order": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "block_id",
+        "run_id",
+        "encoding",
+        "exact_sequence_ids",
+        "generator_rule",
+        "expected_count",
+        "transmit_order",
+        "request_flow_bindings",
+        "packet_schema_digest",
+        "trace_digest",
+        "commitment_time",
+        "receive_state_input_used"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "SequenceManifest"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "SequenceManifest",
+  "type": "object"
+}

@@ -1,0 +1,187 @@
+{
+  "meta": {
+    "artifact_class": "Protocol",
+    "campaign_or_stage_id": "stage:milestone-1",
+    "canonical_digest": "sha256:134e83d4c337f0bff0dacd2a73020c8d807ffaed1efbe2dfc4d90f20ff613372",
+    "created_at": {
+      "clock_domain": "UTC",
+      "value": "2026-08-17T13:40:05Z"
+    },
+    "data_classification": "ProtocolDefinition",
+    "errors": [],
+    "input_digests": [
+      "sha256:9b685e095d175df898080c15b9929642c0ab5c860fdbab463d102fa0558fc409",
+      "sha256:802a2053ab8c3c0f6f8bd803668ddaa24455cc1ae3721bc0d83f8594c113205e",
+      "sha256:67ecff1220cb949abafb50f89daf0d0f7e050bd5cb7a579360dee81c83d8f4fd",
+      "sha256:c5877e26e2f28271473681ee3ce51961469149cd5c6ee0404ce5673031c9f565",
+      "sha256:720414761fa65e7a616e59f64621857faf8d38d757964e8b82442be1765139bb",
+      "sha256:d38c3284590f4e7f8fd8f56abf166115919786e983f2c8b73dd437ef9e81b8ac",
+      "sha256:782c3ca3912ab346db99e9ad0e5024e270d551ddc64b805a4cd414cd1516a553",
+      "sha256:31e3ae3dd23369593e61aadb1b887cd53a190968b0854977364128736dede94b",
+      "sha256:25e69d112f669bdfb4015fa9ddda0caee293cea6888b7a01a90eb7ca47784b32",
+      "sha256:faeabf6cdb5232dcac13791a1e7ede435730e836c1a49c8c2733f8620fd1377c"
+    ],
+    "producer": {
+      "identity": "tool:milestone1-protocol-freezer",
+      "version": "1.0.0"
+    },
+    "provenance": {
+      "raw_records_immutable": true,
+      "source_digests": [
+        "sha256:9b685e095d175df898080c15b9929642c0ab5c860fdbab463d102fa0558fc409",
+        "sha256:802a2053ab8c3c0f6f8bd803668ddaa24455cc1ae3721bc0d83f8594c113205e",
+        "sha256:67ecff1220cb949abafb50f89daf0d0f7e050bd5cb7a579360dee81c83d8f4fd",
+        "sha256:c5877e26e2f28271473681ee3ce51961469149cd5c6ee0404ce5673031c9f565",
+        "sha256:720414761fa65e7a616e59f64621857faf8d38d757964e8b82442be1765139bb",
+        "sha256:d38c3284590f4e7f8fd8f56abf166115919786e983f2c8b73dd437ef9e81b8ac",
+        "sha256:782c3ca3912ab346db99e9ad0e5024e270d551ddc64b805a4cd414cd1516a553",
+        "sha256:31e3ae3dd23369593e61aadb1b887cd53a190968b0854977364128736dede94b",
+        "sha256:25e69d112f669bdfb4015fa9ddda0caee293cea6888b7a01a90eb7ca47784b32",
+        "sha256:faeabf6cdb5232dcac13791a1e7ede435730e836c1a49c8c2733f8620fd1377c"
+      ],
+      "source_record_ids": [],
+      "transformation": "versioned campaign template derived from the frozen scientific protocol"
+    },
+    "record_id": "campaign:template-v1",
+    "schema_version": "1.0.0",
+    "scientific_disposition": "NotMeasurement",
+    "status": {
+      "code": "Template-NotExecutable",
+      "detail": "Milestone 1 protocol definition; not measurement data",
+      "kind": "Pending"
+    },
+    "validity_domain": {
+      "definition": "Scientific protocol and schema version 1.0.0 only",
+      "evidence_digests": [
+        "sha256:9b685e095d175df898080c15b9929642c0ab5c860fdbab463d102fa0558fc409",
+        "sha256:802a2053ab8c3c0f6f8bd803668ddaa24455cc1ae3721bc0d83f8594c113205e",
+        "sha256:67ecff1220cb949abafb50f89daf0d0f7e050bd5cb7a579360dee81c83d8f4fd",
+        "sha256:c5877e26e2f28271473681ee3ce51961469149cd5c6ee0404ce5673031c9f565",
+        "sha256:720414761fa65e7a616e59f64621857faf8d38d757964e8b82442be1765139bb",
+        "sha256:d38c3284590f4e7f8fd8f56abf166115919786e983f2c8b73dd437ef9e81b8ac",
+        "sha256:782c3ca3912ab346db99e9ad0e5024e270d551ddc64b805a4cd414cd1516a553",
+        "sha256:31e3ae3dd23369593e61aadb1b887cd53a190968b0854977364128736dede94b",
+        "sha256:25e69d112f669bdfb4015fa9ddda0caee293cea6888b7a01a90eb7ca47784b32",
+        "sha256:faeabf6cdb5232dcac13791a1e7ede435730e836c1a49c8c2733f8620fd1377c"
+      ],
+      "state": "Known"
+    }
+  },
+  "payload": {
+    "analysis_plan": {
+      "reason": "AnalysisPlan is frozen before confirmatory unblinding",
+      "state": "Unknown"
+    },
+    "attrition_sensitivity": {
+      "state": "Known",
+      "value": "None unless formulas and positivity rules are prospectively frozen before unblinding"
+    },
+    "campaign_id": {
+      "reason": "Assigned only when a campaign is instantiated",
+      "state": "Unknown"
+    },
+    "campaign_template_version": "1.0.0",
+    "confirmatory_execution_permitted": false,
+    "cooldown_duration": {
+      "reason": "D16 is BlockedOnTestbed",
+      "state": "Unknown",
+      "unit": "second"
+    },
+    "cost_coefficients": {
+      "reason": "U04/D12/D22 require prospective calibration; no coefficients exist",
+      "state": "Unknown"
+    },
+    "counter_set": {
+      "reason": "D10 is BlockedOnTestbed",
+      "state": "Unknown"
+    },
+    "decision_ledger_digest": "sha256:faeabf6cdb5232dcac13791a1e7ede435730e836c1a49c8c2733f8620fd1377c",
+    "fixed_attempt_schedule": {
+      "reason": "Frozen after pilot power and invalid-attempt planning",
+      "state": "Unknown"
+    },
+    "frontend_profile": {
+      "reason": "D01 is PendingQualification; neither DPDK nor AF_XDP is selected",
+      "state": "Unknown"
+    },
+    "huge_page_size": {
+      "reason": "D08 is BlockedOnTestbed",
+      "state": "Unknown",
+      "unit": "byte"
+    },
+    "measurement_duration": {
+      "reason": "Resolved during the excluded feasibility pilot",
+      "state": "Unknown",
+      "unit": "second"
+    },
+    "offered_rates": [
+      {
+        "reason": "No stand-dependent offered rate is supplied",
+        "state": "Unknown",
+        "unit": "packet_per_second"
+      }
+    ],
+    "primary_nic_port_bdf": {
+      "reason": "D07 is BlockedOnTestbed; no NIC or PCI BDF is invented",
+      "state": "Unknown"
+    },
+    "protocol_input_digests": [
+      "sha256:9b685e095d175df898080c15b9929642c0ab5c860fdbab463d102fa0558fc409",
+      "sha256:802a2053ab8c3c0f6f8bd803668ddaa24455cc1ae3721bc0d83f8594c113205e",
+      "sha256:67ecff1220cb949abafb50f89daf0d0f7e050bd5cb7a579360dee81c83d8f4fd",
+      "sha256:c5877e26e2f28271473681ee3ce51961469149cd5c6ee0404ce5673031c9f565",
+      "sha256:720414761fa65e7a616e59f64621857faf8d38d757964e8b82442be1765139bb",
+      "sha256:d38c3284590f4e7f8fd8f56abf166115919786e983f2c8b73dd437ef9e81b8ac",
+      "sha256:782c3ca3912ab346db99e9ad0e5024e270d551ddc64b805a4cd414cd1516a553",
+      "sha256:31e3ae3dd23369593e61aadb1b887cd53a190968b0854977364128736dede94b",
+      "sha256:25e69d112f669bdfb4015fa9ddda0caee293cea6888b7a01a90eb7ca47784b32"
+    ],
+    "queue_counts": [
+      {
+        "reason": "No stand-dependent queue count is supplied",
+        "state": "Unknown",
+        "unit": "count"
+      }
+    ],
+    "randomization_seed": {
+      "reason": "Generated and recorded before blocks when a campaign is instantiated",
+      "state": "Unknown"
+    },
+    "reference_condition": {
+      "reason": "D14 is BlockedOnTestbed",
+      "state": "Unknown"
+    },
+    "smallest_relevant_effect": {
+      "reason": "D15 is an unresolved scientific decision",
+      "state": "Unknown",
+      "unit": "ratio"
+    },
+    "stage": "Template",
+    "tau_mem": {
+      "reason": "D17 is BlockedOnTestbed",
+      "state": "Unknown",
+      "unit": "dimensionless"
+    },
+    "timestamp_mechanism": {
+      "reason": "D04 is BlockedOnTestbed",
+      "state": "Unknown"
+    },
+    "topology_snapshot": {
+      "reason": "Unresolved until the declared qualification or physical-testbed freeze point",
+      "state": "Unknown"
+    },
+    "warmup_duration": {
+      "reason": "D16 is BlockedOnTestbed",
+      "state": "Unknown",
+      "unit": "second"
+    },
+    "worker_counts": [
+      {
+        "reason": "No stand-dependent worker count is supplied",
+        "state": "Unknown",
+        "unit": "count"
+      }
+    ]
+  },
+  "record_type": "CampaignDefinition"
+}

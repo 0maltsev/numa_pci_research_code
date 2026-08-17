@@ -1,0 +1,95 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/reference-mapping.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Topology-blind B0-B2 logical mapping and catalog indices.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "construction_rule": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "direction_catalog_indices": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "direction": {
+                "enum": [
+                  "rx",
+                  "tx"
+                ],
+                "type": "string"
+              },
+              "entry_index": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "queue_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              }
+            },
+            "required": [
+              "queue_id",
+              "direction",
+              "entry_index"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "inventory_digests": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/digest"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "queue_worker_map": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "queue_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "worker_role_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              }
+            },
+            "required": [
+              "queue_id",
+              "worker_role_id"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "topology_inputs_used": {
+          "const": false
+        }
+      },
+      "required": [
+        "construction_rule",
+        "topology_inputs_used",
+        "queue_worker_map",
+        "direction_catalog_indices",
+        "inventory_digests"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "ReferenceMapping"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "ReferenceMapping",
+  "type": "object"
+}

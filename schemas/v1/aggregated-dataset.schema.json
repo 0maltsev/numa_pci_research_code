@@ -1,0 +1,278 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/aggregated-dataset.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Run-level nearest-rank, pair, and attrition dataset with immutable provenance.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "adjacent_pair_indicators": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "A_1_0": {
+                "type": "boolean"
+              },
+              "A_2_1": {
+                "type": "boolean"
+              },
+              "A_3_2": {
+                "type": "boolean"
+              },
+              "block_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "pair_record_ids": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 0,
+                "type": "array"
+              }
+            },
+            "required": [
+              "block_id",
+              "A_1_0",
+              "A_2_1",
+              "A_3_2",
+              "pair_record_ids"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "analysis_plan_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "attrition": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "accepted_count": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "attempted_count": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "failure_category": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              },
+              "failure_count": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "failure_rate": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "incomplete_block_policy": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "planned_count": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "policy_or_pair": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              }
+            },
+            "required": [
+              "policy_or_pair",
+              "planned_count",
+              "attempted_count",
+              "accepted_count",
+              "failure_category",
+              "failure_count",
+              "failure_rate",
+              "incomplete_block_policy"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "packet_as_repetition": {
+          "const": false
+        },
+        "page_equivalence_records": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "E_mem_j": {
+                "type": "boolean"
+              },
+              "pair_key": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "record_digest": {
+                "$ref": "common.schema.json#/$defs/digest"
+              },
+              "state": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              }
+            },
+            "required": [
+              "pair_key",
+              "record_digest",
+              "E_mem_j",
+              "state"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "quantile_rule": {
+          "const": "NearestRankNoInterpolation"
+        },
+        "runs": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "A_bj": {
+                "type": "boolean"
+              },
+              "block_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "correctness_digest": {
+                "$ref": "common.schema.json#/$defs/digest"
+              },
+              "nearest_rank_indices": {
+                "additionalProperties": false,
+                "properties": {
+                  "p50": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "p90": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "p99": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "p999": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "p9999_exploratory": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  }
+                },
+                "required": [
+                  "p50",
+                  "p90",
+                  "p99",
+                  "p999",
+                  "p9999_exploratory"
+                ],
+                "type": "object"
+              },
+              "policy": {
+                "enum": [
+                  "B0",
+                  "B1",
+                  "B2",
+                  "B3"
+                ],
+                "type": "string"
+              },
+              "quantiles": {
+                "additionalProperties": false,
+                "properties": {
+                  "maximum": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "p50": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "p90": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "p99": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "p999": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "p9999_exploratory": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  }
+                },
+                "required": [
+                  "p50",
+                  "p90",
+                  "p99",
+                  "p999",
+                  "p9999_exploratory",
+                  "maximum"
+                ],
+                "type": "object"
+              },
+              "run_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "scientifically_excluded": {
+                "type": "boolean"
+              },
+              "source_record_digests": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/digest"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "valid_observation_count": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "run_id",
+              "block_id",
+              "policy",
+              "A_bj",
+              "valid_observation_count",
+              "quantiles",
+              "nearest_rank_indices",
+              "correctness_digest",
+              "scientifically_excluded",
+              "source_record_digests"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "scheduled_attempt_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "analysis_plan_digest",
+        "scheduled_attempt_ids",
+        "runs",
+        "page_equivalence_records",
+        "adjacent_pair_indicators",
+        "attrition",
+        "packet_as_repetition",
+        "quantile_rule"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "AggregatedDataset"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "AggregatedDataset",
+  "type": "object"
+}

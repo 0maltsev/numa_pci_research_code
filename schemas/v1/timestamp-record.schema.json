@@ -1,0 +1,106 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/timestamp-record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Raw timestamp evidence with clock, wrap, and qualification links.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "capture_layer": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "clock_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "conversion_rule": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "converted_time": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "direction": {
+          "enum": [
+            "request_tx",
+            "response_rx",
+            "diagnostic"
+          ],
+          "type": "string"
+        },
+        "epoch_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "event_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "extended_ticks": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "overhead_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "qualification_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "raw_ticks": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "run_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "sequence_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "tick_frequency": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "validity": {
+          "enum": [
+            "Valid",
+            "Clock-Step",
+            "Wrap-Ambiguous",
+            "Timestamp-Ambiguous",
+            "Loss-Gate-Failed",
+            "Qualification-Out-Of-Domain"
+          ],
+          "type": "string"
+        },
+        "wrap_width": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        }
+      },
+      "required": [
+        "event_id",
+        "run_id",
+        "sequence_id",
+        "raw_ticks",
+        "extended_ticks",
+        "clock_id",
+        "epoch_id",
+        "direction",
+        "capture_layer",
+        "tick_frequency",
+        "wrap_width",
+        "conversion_rule",
+        "converted_time",
+        "validity",
+        "qualification_digest",
+        "overhead_digest"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "TimestampRecord"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "TimestampRecord",
+  "type": "object"
+}

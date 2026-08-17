@@ -1,0 +1,146 @@
+\section{Placement Cost Model}
+\label{sec:cost}
+
+\subsection{Complete request/response decomposition}
+
+Let $\set T_0$ contain unloaded, per-packet path primitives. For pipeline $q$, the model distinguishes
+\begin{align*}
+\set T_0=\{&\mathrm{rx\_payload\_dma},\mathrm{rx\_descriptor\_dma},
+\mathrm{tx\_payload\_dma},\mathrm{tx\_descriptor\_dma},\\
+&\mathrm{io\_payload},\mathrm{io\_descriptor},\mathrm{worker\_payload},
+\mathrm{ring\_sync},\mathrm{application\_state},\\
+&\mathrm{mmio\_doorbell},\mathrm{cache\_ddio}\}.
+\end{align*}
+The four DMA primitives use direction, endpoint, selected payload or descriptor memory, transaction class, and typed PCIe/socket path. The I/O-role terms join $O^d(q)$ and the derived PU $c(h)=\eta(\gamma(h))$ to payload or descriptor memory and weight each role's expected demand by the catalog-derived $\bar\pi^d_{qh}$. The worker term joins $c(\omega(q))$ to the selected payload pool. Ring synchronization follows the actual producer, consumer, and $\nu_B(\varphi(q))$; it is identically zero for $b_\varnothing$. Application-state access uses $\zeta(q)$ and is identically zero for $a_\varnothing$. MMIO/doorbell cost follows the responsible execution context's PU-to-endpoint control path. The cache/DDIO term is a calibrated delta under a standardized cache state, not a claim that every platform implements DDIO. For an observed-only shared profile, $\vect{\bar\pi}$ is a frozen workload-dependent planning input and $\vect{\widetilde\pi}$ is a validation observation; neither is presented as an exactly applied share. RxBisect's separation of descriptor ownership, buffer allocation, and packet delivery motivates retaining these primitives instead of representing ``the RX queue'' by one scalar \cite{pismenny2025rxbisect}.
+
+For each $t\in\set T_0$, let $z^0_{qt}(\Pi,G_s)$ be either a calibrated unloaded quantity or a declared structural proxy, and let $n_{qt\ell}$ be the expected number of such operations per packet. Define
+\begin{equation}
+ \widehat z^0_{qt}=
+ \frac{\max\{0,f_t(z^0_{qt})-f_t(z^{\mathrm{ref}}_t)\}}{s_t},
+ \qquad s_t>0,
+ \label{eq:primitive-normalization}
+\end{equation}
+where $f_t$ is a pre-specified monotone transform, $z^{\mathrm{ref}}_t$ an unloaded reference, and $s_t$ a scale stored with the model. The quantity $\widehat z^0_{qt}$ is dimensionless and nonnegative.
+
+Let $\set E_L$ contain capacity-bearing resources: logical worker/I/O roles, physical execution contexts, PUs, memory controllers, socket links, PCIe links/root domains, and cache domains. Their normalized utilization is $u_e(\Pi,\ell)$, with calibrated safe capacity as denominator. A load surcharge is
+\begin{equation}
+ \widehat\Psi_e(u_e)=
+ \frac{\max\{0,\psi_e(u_e)-\psi_e(0)\}}{s_e^L},
+ \label{eq:congestion-surcharge}
+\end{equation}
+where $\psi_e$ is nondecreasing on its validated domain and $s_e^L>0$. Subtracting $\psi_e(0)$ prevents the unloaded path penalty from being counted again as congestion. Let $v_{qe}$ be the nonnegative fraction of $q$'s measured demand attributed to $e$.
+
+With $\Lambda_\ell=\sum_q\lambda_{q\ell}$, define $r_{q\ell}=\lambda_{q\ell}/\Lambda_\ell$ when $\Lambda_\ell>0$. For a topology-only plan with no offered load, use the explicit convention $r_{q\ell}=1/|\set Q|$ and set all load surcharges to zero. Define normalized within-group scores
+\begin{align}
+C_{\mathrm{top}}(\Pi)={}&
+ \sum_{q\in\set Q} r_{q\ell}
+ \sum_{t\in\set T_0}\alpha_t n_{qt\ell}\widehat z^0_{qt},
+ \qquad \sum_{t\in\set T_0}\alpha_t=1, \label{eq:topology-group}\\
+C_{\mathrm{load}}(\Pi)={}&
+ \sum_{e\in\set E_L}\alpha^L_e
+ \Bigl(\sum_q r_{q\ell}v_{qe}\Bigr)\widehat\Psi_e(u_e)\notag\\
+&+\alpha^{\mathrm{bal}}\widehat B(\Pi,\ell),\qquad
+ \sum_{e\in\set E_L}\alpha^L_e+\alpha^{\mathrm{bal}}=1.
+ \label{eq:load-group}
+\end{align}
+All component weights in these simplices are nonnegative. The complete score is
+\begin{align}
+J(\Pi;G_s,\ell,\vect\alpha,\vect\beta)={}&
+ \beta_{\mathrm{top}}C_{\mathrm{top}}(\Pi)
+ +\beta_{\mathrm{load}}C_{\mathrm{load}}(\Pi)\notag\\
+&+\beta_{\mathrm{unc}}\widehat U(\Pi,G_s)
+ +\beta_{\mathrm{chg}}\widehat R(\Pi,\Pi_{\mathrm{prev}}),
+\label{eq:cost}
+\end{align}
+where $\beta_{\mathrm{top}},\beta_{\mathrm{load}},\beta_{\mathrm{unc}},\beta_{\mathrm{chg}}\geq0$ set the relative scale of the four groups. $\widehat B$ is a normalized execution-context imbalance measure, such as the variance plus maximum utilization after centering at the best feasible value. $\widehat U$ is an explicitly reported uncertainty surcharge for non-safety-critical unknown attributes. $\widehat R$ is zero for static planning and otherwise measures normalized changes in logical owners, execution-context PUs, memory objects, and rings. Safety-critical unknowns and capacity violations remain infeasible rather than receiving $\widehat U$.
+
+\subsection{Term ownership and avoidance of double counting}
+
+Every calibrated observation has one entry in a term-ownership ledger containing physical mechanism, direction, initiator, target, transaction class, base reference, unit, component term, owning group, component weight, and group coefficient. Four rules are enforced.
+
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+  \item A primitive uses either its calibrated unloaded value or its structural proxy. PCIe crossings, NUMA distance, and measured primitive latency are not simultaneously charged for the same transaction.
+  \item A resource's load term is the incremental surcharge in \cref{eq:congestion-surcharge}; its unloaded component remains solely in $\widehat z^0$.
+  \item Hardware counters used to calibrate or explain a primitive are not added again as independent costs. A counter becomes an objective feature only in a separately declared model variant that disables the term it replaces; moving a term between groups never duplicates it.
+  \item Cache/DDIO and other interactions are calibrated as deltas from a standardized base state. A new interaction enters the score only if it is identifiable in training data and improves held-out ranking under the frozen admission rule.
+\end{enumerate}
+
+This ledger is part of the reproducibility package. It makes an ablation interpretable: removing a term removes one owned mechanism rather than leaving a duplicate proxy behind.
+
+\subsection{Units, monotonicity, and identifiability}
+
+Raw latency, bandwidth, transaction, byte, and utilization quantities retain their units in the calibration record; only their normalized forms enter \cref{eq:cost}. All $\alpha$ component weights and $\beta$ group coefficients are dimensionless. The two within-group simplex constraints make component shares identifiable inside $C_{\mathrm{top}}$ and $C_{\mathrm{load}}$. To remove the remaining common-scale non-identifiability, $\beta_{\mathrm{top}}=1$ is the reference coefficient whenever the topology group is present; the other $\beta$ values are relative to it. This convention does not resolve feature collinearity.
+
+Topology structure and unloaded calibration determine the values entering $C_{\mathrm{top}}$. $C_{\mathrm{load}}(\Pi,\ell)$ is workload-dependent through demands and utilization. The $\alpha$ and unfixed $\beta$ coefficients are estimated on calibration/training runs and frozen within a validity domain; they do not change in response to a confirmatory run. $\beta_{\mathrm{unc}}$ prices non-safety-critical missingness under a predeclared uncertainty policy, and $\beta_{\mathrm{chg}}$ is relevant only to the separately declared re-planning treatment.
+
+Each normalized component is expected to be nondecreasing in an adverse path attribute, operation count, utilization, imbalance, uncertainty, or change when other variables and nonnegative coefficients are held fixed. Increasing a group coefficient cannot reduce $J$. This does not imply that a physically shorter route always has lower total cost: a longer path with spare capacity can outrank a congested local controller \cite{lepers2015asymmetry,dashti2013carrefour,siavashi2026phoenix}. Direction-specific primitives allow RX writes, TX reads, descriptor traffic, and CPU access to respond differently.
+
+DMA path, socket crossings, and interconnect counters can be collinear; worker and I/O demand can also covary with rate. The model report therefore gives design-matrix rank, condition diagnostics, coefficient uncertainty, pairwise feature association, and held-out rank stability after group removal. Collinear terms are combined or one is disabled according to a rule frozen before confirmatory runs. A positive fitted coefficient is not interpreted causally.
+
+\subsection{Pre-specified coefficient estimator}
+
+The calibration unit is one complete run that has passed every calibration correctness gate. For accepted run $r$, let
+\begin{equation}
+ y_r=\log \widehat Q_{0.999,r},
+ \end{equation}
+where $\widehat Q$ is the nearest-rank estimator in \cref{eq:nearest-rank}, and let $x_{rgj}$ be frozen normalized feature $j$ in group $g\in\set G=\{\mathrm{top},\mathrm{load},\mathrm{unc},\mathrm{chg}\}$. Features retain the term-ledger order and contain no confirmatory observations. Calibration is divided into a training set $\set C_{\mathrm{tr}}$ and an untouched external validation set $\set C_{\mathrm{val}}$ by complete run and placement relation; no packet from one run can enter another split. Condition $c(r)$ identifies the frozen workload/topology condition.
+
+Let $n_{\mathrm{tr}}=|\set C_{\mathrm{tr}}|>0$. The sole coefficient estimator is nonnegative ridge regression. For each positive $\lambda$ in a finite grid $\set L_\lambda$ frozen before response fitting, it solves
+\begin{equation}
+ (\widehat{\vect\delta}_\lambda,\widehat{\vect\theta}_\lambda)
+ =\arg\min_{\vect\delta,\,\vect\theta\geq0}
+ \left\{
+ \frac{1}{n_{\mathrm{tr}}}
+ \sum_{r\in\set C_{\mathrm{tr}}}
+ \left(y_r-\delta_{c(r)}-\sum_{g,j}x_{rgj}\theta_{gj}\right)^2
+ +\lambda\sum_{g,j}\theta_{gj}^2
+ \right\}.
+ \label{eq:nonnegative-ridge}
+\end{equation}
+There is one unpenalized condition intercept and no additional global intercept. Each training condition must contain an accepted run. Intercepts absorb condition levels during fitting and evaluation only; they are discarded before placement scoring. The positive ridge term and nonnegativity produce a deterministic convex estimate under the frozen solver precision and feature order; they do not imply causal coefficients.
+
+Let $\rho(r)$ identify the placement relation of run $r$, let $\set V_f$ be validation fold $f$, and let $\set T_f=\set C_{\mathrm{tr}}\setminus\set V_f$. Folds are condition-stratified while retaining placement-relation blocking: all replicates with one $\rho$ remain in one fold; every condition participating in cross-validation contains at least two independent placement-relation groups; and, for every $r\in\set V_f$, at least one accepted $r'\in\set T_f$ satisfies $c(r')=c(r)$. Thus $\widehat\delta_{c(r),-f}$ is always estimated from training data. If no fold assignment satisfies all three conditions, preprocessing returns \textsc{Condition-Coverage-Insufficient} and calibration terminates with \textsc{Calibration-Failed}; validation observations cannot be moved into training, assigned an invented intercept, or used to select another estimator. The validation loss for an admissible fold is mean squared error in log latency on complete held-out runs,
+\begin{equation}
+ \operatorname{MSE}_f(\lambda)=|\set V_f|^{-1}
+ \sum_{r\in\set V_f}(y_r-\widehat\delta_{c(r),-f}
+ -\vect x_r^{\mathsf T}\widehat{\vect\theta}_{\lambda,-f})^2.
+ \label{eq:calibration-validation-loss}
+\end{equation}
+The selected value minimizes the fold-size-weighted mean of \cref{eq:calibration-validation-loss}; an exact numerical tie selects the larger $\lambda$. The model is then refit on all of $\set C_{\mathrm{tr}}$. The dataset and model artifacts store a condition-by-placement-relation coverage map, every candidate and accepted fold, fold-admissibility findings, the grid, seeds, feature order, transforms, scales, solver/tolerance identity, coefficient vector, and predictions. Confirmatory data are never used for fitting, feature selection, regularization, or normalization.
+
+Rank and collinearity are evaluated on the training feature matrix after projection away from the condition-indicator space. Exactly equal columns may be merged only when the term-ownership ledger identifies the same physical mechanism; the merged coefficient represents their combined effect and the constituents are marked non-identifiable. The residualized matrix must meet a rank tolerance $\tau_{\mathrm{rank}}$ and condition-number limit $\kappa_{\mathrm{design}}$ fixed from numeric-resolution and coefficient-repeatability tests in a performance-blind implementation pilot. If it does not, the last implicated term in a frozen, mechanism-based precedence order is disabled, and the diagnostic is repeated. No latency-significance test determines this order. If this process removes the topology group, leaves a required group without an admitted term, or still fails the diagnostic, calibration terminates with \textsc{Calibration-Failed}.
+
+Let $s_g=\sum_j\widehat\theta_{gj}$. Admission requires $s_{\mathrm{top}}>0$. The fitted effective coefficients are factored as
+\begin{equation}
+ \alpha_{gj}=\frac{\widehat\theta_{gj}}{s_g}\quad(s_g>0),
+ \qquad \beta_{\mathrm{top}}=1,
+ \qquad \beta_g=\frac{s_g}{s_{\mathrm{top}}}.
+ \label{eq:coefficient-factorization}
+\end{equation}
+Then $\sum_j\alpha_{gj}=1$ for every enabled group and
+$\sum_{g,j}x_{rgj}\widehat\theta_{gj}=s_{\mathrm{top}}
+\sum_g\beta_g\sum_j\alpha_{gj}x_{rgj}$, so the score exactly reproduces the fitted placement component up to the irrelevant common factor $s_{\mathrm{top}}$. A group with $s_g=0$ receives \textsc{Disabled-Zero-Scale}, $\beta_g=0$, and no artificial simplex vector.
+
+External validation is partitioned before outcomes are revealed. For $\set C_{\mathrm{val}}^{\mathrm{seen}}=\{r\in\set C_{\mathrm{val}}:c(r)\in c(\set C_{\mathrm{tr}})\}$, absolute log-MSE and residuals use the intercept fitted from $\set C_{\mathrm{tr}}$, and within-condition Spearman rank correlation, top-choice accuracy with deterministic cost ties, and regret are also reported. For an unseen condition in $\set C_{\mathrm{val}}^{\mathrm{new}}$, no fitted intercept exists: absolute prediction MSE and absolute residuals are undefined and must not be computed by estimating an intercept from validation outcomes. Transfer is evaluated only by within-condition rank, top-choice accuracy, and regret over at least two independently admissible placement relations. These transfer metrics cannot by themselves admit the unseen condition to the primary validity domain. Before validation outcomes are revealed, a performance-blind pilot converts timestamp resolution, replicate noise, candidate decision margin, and intended validity-domain coverage into frozen admissibility limits for the applicable loss, rank, top-choice, regret, and extrapolation checks. The artifact is admitted to B3 planning only if all rank/design checks and the predeclared within-condition admission checks for the primary validity domain pass. Failure returns \textsc{Calibration-Failed}, blocks the confirmatory B3 campaign, and cannot be repaired with confirmatory data or a silently substituted estimator.
+
+\subsection{Seven-phase calibration and validation protocol}
+
+Calibration precedes and is disjoint from the confirmatory baseline experiment.
+
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Discover and freeze.} Qualify the topology snapshot, frontend, ownership mode, clocks, power state, counters, and candidate resource inventory. Record every unknown and invalidate the phase on a snapshot change.
+  \item \textbf{Calibrate unloaded primitives.} Measure direction-specific endpoint--payload, endpoint--descriptor, context--memory, worker--memory, ring-handoff, state-access, and MMIO paths under low offered load. Vary one typed relation at a time where the topology permits and standardize cache state.
+  \item \textbf{Calibrate demand and capacity.} Estimate per-packet worker/context service time, safe worker/PU capacities, memory, PCIe, and socket-link knees, operation counts, normalization references, and scales without using baseline outcomes.
+  \item \textbf{Calibrate interactions and congestion.} Sweep controlled utilization of each observable capacity domain; estimate $\psi_e(u)-\psi_e(0)$ and cache/DDIO deltas; reject unidentifiable or non-monotone forms outside a predeclared tolerance.
+  \item \textbf{Identify on training units.} Split by complete run and placement/topology relation, never by packet. Construct condition-stratified blocked folds, validate the condition-coverage map before fitting, apply the frozen rank/collinearity rule, fit \cref{eq:nonnegative-ridge}, choose $\lambda$ by the sole minimum-MSE rule over admissible folds, and recover $\vect\alpha,\vect\beta$ through \cref{eq:coefficient-factorization} without confirmatory outcomes.
+  \item \textbf{Validate on held-out units.} For conditions represented in training, report external log-MSE, residuals, rank agreement, top-choice accuracy, and regret. For unseen-condition transfer, report only within-condition rank, top-choice, and regret, without fitting a validation intercept. A failed artifact receives \textsc{Calibration-Failed} and cannot plan confirmatory B3; a passing artifact is restricted to its frozen validity domain and is not repaired with confirmatory data.
+  \item \textbf{Freeze and version.} Store the term ledger, transforms, scales, component weights, group coefficients, regularization rule, uncertainty, validity domain, data split, and digest. Precompute sensitivity variants. No coefficient, term, or normalization changes after confirmatory outcomes are revealed.
+\end{enumerate}
+
+Performance-contract work demonstrates the value of explicit critical variables while identifying NIC, PCIe, and queueing as omitted end-to-end components \cite{iyer2019contracts}. The protocol above measures those components but makes no prediction-accuracy claim before held-out validation.
+
+\subsection{Ablations and limitations}
+
+Hard constraints remain $\set F$ in \cref{eq:optimization}. The planned component ablations re-plan after removing, one at a time, RX payload DMA, descriptor DMA, TX DMA, context-memory, worker-memory, ring synchronization, application-state, MMIO, cache/DDIO, individual congestion resources, and imbalance. Group ablations set exactly one of $\beta_{\mathrm{load}}$, $\beta_{\mathrm{unc}}$, or $\beta_{\mathrm{chg}}$ to zero while leaving the ownership ledger intact. A mandatory composite contrast compares a \emph{topology-only} planner ($\beta_{\mathrm{load}}=0$, unloaded primitives, and equal zero-load shares) with the full \emph{load-aware} planner. Sensitivity varies component weights over their simplices, relative group coefficients over their joint calibration uncertainty, normalization scales, regularization choices, and uncertainty surcharges. Null ring/state terms remain zero and are not treated as successful ablations.
+
+The score is not a cycle-accurate simulator. Counters may lack queue attribution; calibrated values can age with firmware, load, or power state; and interactions can violate additivity. These limits are exposed through validity domains, residuals, term ablation, and transfer tests rather than concealed by unmeasured coefficients.

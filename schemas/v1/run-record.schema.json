@@ -1,0 +1,125 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/run-record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Scheduled policy-attempt lifecycle and immutable acceptance index.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "A_bj": {
+          "type": "boolean"
+        },
+        "acceptance_record_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "attempt_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "attempt_status": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "block_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "cleanup_status": {
+          "enum": [
+            "Verified",
+            "Rollback-Incomplete",
+            "Host-Dirty"
+          ],
+          "type": "string"
+        },
+        "dirty_host": {
+          "type": "boolean"
+        },
+        "exclusion_status": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "input_record_digests": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/digest"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "operator_intervention": {
+          "type": "boolean"
+        },
+        "pair_status": {
+          "enum": [
+            "NotApplicable",
+            "Pair-Pending",
+            "Finalized"
+          ],
+          "type": "string"
+        },
+        "phase_record_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "policy": {
+          "enum": [
+            "B0",
+            "B1",
+            "B2",
+            "B3"
+          ],
+          "type": "string"
+        },
+        "prospective_pair_keys": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "randomization_seed_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "run_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "scheduled_order_index": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        }
+      },
+      "required": [
+        "block_id",
+        "run_id",
+        "attempt_id",
+        "policy",
+        "randomization_seed_digest",
+        "scheduled_order_index",
+        "phase_record_ids",
+        "input_record_digests",
+        "A_bj",
+        "prospective_pair_keys",
+        "pair_status",
+        "acceptance_record_digest",
+        "attempt_status",
+        "exclusion_status",
+        "cleanup_status",
+        "dirty_host",
+        "operator_intervention"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "RunRecord"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "RunRecord",
+  "type": "object"
+}

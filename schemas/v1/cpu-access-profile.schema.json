@@ -1,0 +1,87 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/cpu-access-profile.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Frozen per-object actual CPU-access demand shares for B2.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "frozen_before_baseline_execution": {
+          "const": true
+        },
+        "objects": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "accessors": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "demand_share": {
+                      "$ref": "common.schema.json#/$defs/quantity"
+                    },
+                    "physical_context_id": {
+                      "$ref": "common.schema.json#/$defs/stableId"
+                    }
+                  },
+                  "required": [
+                    "physical_context_id",
+                    "demand_share"
+                  ],
+                  "type": "object"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "derivation_digest": {
+                "$ref": "common.schema.json#/$defs/digest"
+              },
+              "dominant_accessor_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "material": {
+                "type": "boolean"
+              },
+              "object_role": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              },
+              "split_access": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "object_role",
+              "material",
+              "accessors",
+              "dominant_accessor_id",
+              "split_access",
+              "derivation_digest"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "objects",
+        "frozen_before_baseline_execution"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "CPUAccessProfile"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "CPUAccessProfile",
+  "type": "object"
+}

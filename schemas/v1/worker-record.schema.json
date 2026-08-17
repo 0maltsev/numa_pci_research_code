@@ -1,0 +1,81 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/worker-record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Invariant worker service and execution-context evidence.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "cpu_samples": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "cycles": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "elapsed_time": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "integrity_status": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "operation_result": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "physical_context_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "progress": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "request_sequence_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "response_sequence_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "run_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "thread_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "worker_role_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        }
+      },
+      "required": [
+        "run_id",
+        "request_sequence_id",
+        "response_sequence_id",
+        "worker_role_id",
+        "physical_context_id",
+        "thread_id",
+        "operation_result",
+        "progress",
+        "cycles",
+        "elapsed_time",
+        "cpu_samples",
+        "integrity_status"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "WorkerRecord"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "WorkerRecord",
+  "type": "object"
+}

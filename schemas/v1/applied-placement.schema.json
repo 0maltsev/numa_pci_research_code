@@ -1,0 +1,169 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/applied-placement.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Requested placement actions with prior-state and rollback evidence.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "actions": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "action_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "dependency_ids": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "desired": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "ended_at": {
+                "$ref": "common.schema.json#/$defs/timestamp"
+              },
+              "no_action_reason": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "requested": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "started_at": {
+                "$ref": "common.schema.json#/$defs/timestamp"
+              },
+              "status": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              }
+            },
+            "required": [
+              "action_id",
+              "dependency_ids",
+              "desired",
+              "requested",
+              "no_action_reason",
+              "status",
+              "started_at",
+              "ended_at"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "authorization": {
+          "enum": [
+            "DryRun",
+            "ApplyAuthorized"
+          ],
+          "type": "string"
+        },
+        "dirty_host": {
+          "type": "boolean"
+        },
+        "placement_state": {
+          "additionalProperties": false,
+          "properties": {
+            "applied": {
+              "$ref": "common.schema.json#/$defs/statefulValue"
+            },
+            "desired": {
+              "$ref": "common.schema.json#/$defs/statefulValue"
+            },
+            "observed": {
+              "$ref": "common.schema.json#/$defs/statefulValue"
+            },
+            "requested": {
+              "$ref": "common.schema.json#/$defs/statefulValue"
+            }
+          },
+          "required": [
+            "desired",
+            "requested",
+            "applied",
+            "observed"
+          ],
+          "type": "object"
+        },
+        "plan_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "post_rollback_readback_digest": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "prior_state_journal": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "captured_digest": {
+                "$ref": "common.schema.json#/$defs/digest"
+              },
+              "journal_entry_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "prior_value": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "target_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              }
+            },
+            "required": [
+              "journal_entry_id",
+              "target_id",
+              "prior_value",
+              "captured_digest"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "rollback_plan": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "rollback_result": {
+          "enum": [
+            "NotRequired",
+            "Succeeded",
+            "Failed"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "plan_digest",
+        "authorization",
+        "placement_state",
+        "actions",
+        "prior_state_journal",
+        "rollback_plan",
+        "rollback_result",
+        "post_rollback_readback_digest",
+        "dirty_host"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "AppliedPlacement"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "AppliedPlacement",
+  "type": "object"
+}

@@ -1,0 +1,534 @@
+{
+  "$defs": {
+    "creationTime": {
+      "additionalProperties": false,
+      "properties": {
+        "clock_domain": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "value": {
+          "$ref": "#/$defs/timestamp"
+        }
+      },
+      "required": [
+        "value",
+        "clock_domain"
+      ],
+      "type": "object"
+    },
+    "decimalString": {
+      "examples": [
+        "0"
+      ],
+      "pattern": "-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?",
+      "type": "string"
+    },
+    "digest": {
+      "examples": [
+        "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "pattern": "sha256:[0-9a-f]{64}",
+      "type": "string"
+    },
+    "errorRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "affected_facts": {
+          "items": {
+            "$ref": "#/$defs/stableId"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "code": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "component": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "error_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "message": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "recovery_status": {
+          "enum": [
+            "NotRequired",
+            "Pending",
+            "Succeeded",
+            "Failed",
+            "Impossible"
+          ],
+          "type": "string"
+        },
+        "rollback_status": {
+          "enum": [
+            "NotApplicable",
+            "NotStarted",
+            "Succeeded",
+            "Failed"
+          ],
+          "type": "string"
+        },
+        "scientific_disposition": {
+          "enum": [
+            "Eligible",
+            "ScientificallyExcluded",
+            "DiagnosticOnly"
+          ],
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "Info",
+            "Warning",
+            "Error",
+            "Fatal"
+          ],
+          "type": "string"
+        },
+        "stage": {
+          "$ref": "#/$defs/nonemptyString"
+        }
+      },
+      "required": [
+        "error_id",
+        "component",
+        "stage",
+        "code",
+        "severity",
+        "affected_facts",
+        "message",
+        "recovery_status",
+        "rollback_status",
+        "scientific_disposition"
+      ],
+      "type": "object"
+    },
+    "finding": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "detail": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "finding_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "severity": {
+          "enum": [
+            "Info",
+            "Warning",
+            "Error",
+            "Fatal"
+          ],
+          "type": "string"
+        },
+        "subject_ids": {
+          "items": {
+            "$ref": "#/$defs/stableId"
+          },
+          "minItems": 0,
+          "type": "array"
+        }
+      },
+      "required": [
+        "finding_id",
+        "code",
+        "severity",
+        "subject_ids",
+        "detail"
+      ],
+      "type": "object"
+    },
+    "nonemptyString": {
+      "examples": [
+        "fixture-value"
+      ],
+      "minLength": 1,
+      "type": "string"
+    },
+    "producer": {
+      "additionalProperties": false,
+      "properties": {
+        "identity": {
+          "$ref": "#/$defs/stableId"
+        },
+        "version": {
+          "$ref": "#/$defs/nonemptyString"
+        }
+      },
+      "required": [
+        "identity",
+        "version"
+      ],
+      "type": "object"
+    },
+    "provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "raw_records_immutable": {
+          "type": "boolean"
+        },
+        "source_digests": {
+          "items": {
+            "$ref": "#/$defs/digest"
+          },
+          "minItems": 0,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "source_record_ids": {
+          "items": {
+            "$ref": "#/$defs/stableId"
+          },
+          "minItems": 0,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "transformation": {
+          "$ref": "#/$defs/nonemptyString"
+        }
+      },
+      "required": [
+        "source_record_ids",
+        "source_digests",
+        "transformation",
+        "raw_records_immutable"
+      ],
+      "type": "object"
+    },
+    "quantity": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/quantityKnown"
+        },
+        {
+          "$ref": "#/$defs/quantityUnavailable"
+        }
+      ]
+    },
+    "quantityKnown": {
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "const": "Known"
+        },
+        "unit": {
+          "$ref": "#/$defs/unit"
+        },
+        "value": {
+          "$ref": "#/$defs/decimalString"
+        }
+      },
+      "required": [
+        "state",
+        "value",
+        "unit"
+      ],
+      "type": "object"
+    },
+    "quantityUnavailable": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "state": {
+          "enum": [
+            "Unknown",
+            "Missing",
+            "Unsupported",
+            "NotApplicable"
+          ],
+          "type": "string"
+        },
+        "unit": {
+          "$ref": "#/$defs/unit"
+        }
+      },
+      "required": [
+        "state",
+        "unit",
+        "reason"
+      ],
+      "type": "object"
+    },
+    "quantityVectorEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "domain_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "quantity": {
+          "$ref": "#/$defs/quantity"
+        }
+      },
+      "required": [
+        "domain_id",
+        "quantity"
+      ],
+      "type": "object"
+    },
+    "recordMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_class": {
+          "enum": [
+            "Raw",
+            "Derived",
+            "Configuration",
+            "Protocol",
+            "TestFixture"
+          ],
+          "type": "string"
+        },
+        "campaign_or_stage_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "canonical_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "created_at": {
+          "$ref": "#/$defs/creationTime"
+        },
+        "data_classification": {
+          "enum": [
+            "Measurement",
+            "NON_MEASUREMENT_TEST_FIXTURE",
+            "ProtocolDefinition",
+            "ConfigurationEvidence"
+          ],
+          "type": "string"
+        },
+        "errors": {
+          "items": {
+            "$ref": "#/$defs/errorRecord"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "input_digests": {
+          "items": {
+            "$ref": "#/$defs/digest"
+          },
+          "minItems": 0,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "producer": {
+          "$ref": "#/$defs/producer"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        },
+        "record_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "scientific_disposition": {
+          "enum": [
+            "Eligible",
+            "ScientificallyExcluded",
+            "DiagnosticOnly",
+            "NotMeasurement"
+          ],
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "validity_domain": {
+          "$ref": "#/$defs/validityDomain"
+        }
+      },
+      "required": [
+        "schema_version",
+        "record_id",
+        "producer",
+        "created_at",
+        "campaign_or_stage_id",
+        "input_digests",
+        "canonical_digest",
+        "status",
+        "errors",
+        "artifact_class",
+        "data_classification",
+        "scientific_disposition",
+        "validity_domain",
+        "provenance"
+      ],
+      "type": "object"
+    },
+    "stableId": {
+      "examples": [
+        "fixture:record-001"
+      ],
+      "pattern": "[A-Za-z][A-Za-z0-9_.:/-]{2,127}",
+      "type": "string"
+    },
+    "statefulKnown": {
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "const": "Known"
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "value"
+      ],
+      "type": "object"
+    },
+    "statefulUnavailable": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "state": {
+          "enum": [
+            "Unknown",
+            "Missing",
+            "Unsupported",
+            "NotApplicable"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "state",
+        "reason"
+      ],
+      "type": "object"
+    },
+    "statefulValue": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/statefulKnown"
+        },
+        {
+          "$ref": "#/$defs/statefulUnavailable"
+        }
+      ]
+    },
+    "status": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "detail": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "kind": {
+          "enum": [
+            "Success",
+            "Pending",
+            "Failure",
+            "Blocked",
+            "Excluded"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "code",
+        "detail"
+      ],
+      "type": "object"
+    },
+    "timestamp": {
+      "examples": [
+        "2000-01-01T00:00:00Z"
+      ],
+      "format": "date-time",
+      "type": "string"
+    },
+    "unit": {
+      "enum": [
+        "dimensionless",
+        "count",
+        "byte",
+        "bit",
+        "page",
+        "slot",
+        "packet",
+        "event",
+        "transaction",
+        "packet_per_second",
+        "bit_per_second",
+        "byte_per_second",
+        "second",
+        "millisecond",
+        "microsecond",
+        "nanosecond",
+        "tick",
+        "cycle",
+        "hertz",
+        "degree_celsius",
+        "ratio",
+        "percent",
+        "pu_second_per_second",
+        "index"
+      ],
+      "type": "string"
+    },
+    "validityDomain": {
+      "additionalProperties": false,
+      "properties": {
+        "definition": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "evidence_digests": {
+          "items": {
+            "$ref": "#/$defs/digest"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "state": {
+          "enum": [
+            "Known",
+            "Unknown",
+            "Missing",
+            "Unsupported",
+            "NotApplicable"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "state",
+        "definition",
+        "evidence_digests"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/common.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NUMA/PCIe benchmark common record definitions"
+}

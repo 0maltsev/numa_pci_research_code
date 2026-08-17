@@ -1,0 +1,92 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/clock-qualification.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Timestamp decision-tree qualification and error bounds.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "capture_boundary": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "clock_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "error_bound": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "matching_capacity": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "overhead_bound": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "qualification_validity_domain": {
+          "$ref": "common.schema.json#/$defs/validityDomain"
+        },
+        "rate_dependent_bias": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "rejected_branches": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "resolution": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "selected_branch": {
+          "enum": [
+            "PendingQualification",
+            "ExternalSingleClock",
+            "SameTgNicHardwareClock",
+            "BoundedTgSoftwareDiagnostic",
+            "Unsupported"
+          ],
+          "type": "string"
+        },
+        "timestamp_loss": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "wrap_rule": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        }
+      },
+      "required": [
+        "selected_branch",
+        "rejected_branches",
+        "clock_ids",
+        "capture_boundary",
+        "resolution",
+        "wrap_rule",
+        "matching_capacity",
+        "rate_dependent_bias",
+        "timestamp_loss",
+        "error_bound",
+        "overhead_bound",
+        "qualification_validity_domain"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "ClockQualification"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "ClockQualification",
+  "type": "object"
+}

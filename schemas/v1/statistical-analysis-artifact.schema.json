@@ -1,0 +1,429 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/statistical-analysis-artifact.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Frozen conditional accepted-pair inference and mandatory attrition report.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "analysis_plan_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "assumption_sensitive": {
+          "type": "boolean"
+        },
+        "decision_ledger_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "diagnostics": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "diagnostic_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "result": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              },
+              "threshold": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "value": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "diagnostic_id",
+              "value",
+              "threshold",
+              "result"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "failed_latency_imputed": {
+          "const": false
+        },
+        "key_secondary": {
+          "additionalProperties": false,
+          "properties": {
+            "rq1_b1_b0": {
+              "additionalProperties": false,
+              "properties": {
+                "absolute_difference": {
+                  "$ref": "common.schema.json#/$defs/quantity"
+                },
+                "accepted_pair_ids": {
+                  "items": {
+                    "$ref": "common.schema.json#/$defs/nonemptyString"
+                  },
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "holm_adjusted_p_value": {
+                  "$ref": "common.schema.json#/$defs/quantity"
+                },
+                "mean_log_ratio": {
+                  "$ref": "common.schema.json#/$defs/quantity"
+                },
+                "raw_p_value": {
+                  "$ref": "common.schema.json#/$defs/quantity"
+                }
+              },
+              "required": [
+                "accepted_pair_ids",
+                "mean_log_ratio",
+                "absolute_difference",
+                "raw_p_value",
+                "holm_adjusted_p_value"
+              ],
+              "type": "object"
+            },
+            "rq2_b2_b1": {
+              "additionalProperties": false,
+              "properties": {
+                "absolute_difference": {
+                  "$ref": "common.schema.json#/$defs/quantity"
+                },
+                "accepted_pair_ids": {
+                  "items": {
+                    "$ref": "common.schema.json#/$defs/nonemptyString"
+                  },
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "holm_adjusted_p_value": {
+                  "$ref": "common.schema.json#/$defs/quantity"
+                },
+                "mean_log_ratio": {
+                  "$ref": "common.schema.json#/$defs/quantity"
+                },
+                "raw_p_value": {
+                  "$ref": "common.schema.json#/$defs/quantity"
+                }
+              },
+              "required": [
+                "accepted_pair_ids",
+                "mean_log_ratio",
+                "absolute_difference",
+                "raw_p_value",
+                "holm_adjusted_p_value"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "rq1_b1_b0",
+            "rq2_b2_b1"
+          ],
+          "type": "object"
+        },
+        "operational_feasibility": {
+          "additionalProperties": false,
+          "properties": {
+            "adjacent_pair_counts": {
+              "items": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "attempted_blocks": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            },
+            "categorized_attrition_digest": {
+              "$ref": "common.schema.json#/$defs/digest"
+            },
+            "planned_blocks": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            },
+            "policy_counts": {
+              "items": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "minItems": 1,
+              "type": "array"
+            }
+          },
+          "required": [
+            "planned_blocks",
+            "attempted_blocks",
+            "policy_counts",
+            "adjacent_pair_counts",
+            "categorized_attrition_digest"
+          ],
+          "type": "object"
+        },
+        "packets_as_repetitions": {
+          "const": false
+        },
+        "primary": {
+          "additionalProperties": false,
+          "properties": {
+            "D_j": {
+              "items": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "minItems": 0,
+              "type": "array"
+            },
+            "accepted_pair_count": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            },
+            "accepted_pair_ids": {
+              "items": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              },
+              "minItems": 0,
+              "type": "array"
+            },
+            "decision": {
+              "$ref": "common.schema.json#/$defs/nonemptyString"
+            },
+            "estimand_label": {
+              "const": "ConditionalAcceptedPairMeanLogRatio_B3_over_B2"
+            },
+            "mean_D": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            },
+            "one_sided_p_value": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            },
+            "planned_pair_count": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            },
+            "reference_condition_id": {
+              "$ref": "common.schema.json#/$defs/stableId"
+            },
+            "standard_error": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            },
+            "t_statistic": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            },
+            "transformed_relative_effect": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            },
+            "two_sided_95_lower": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            },
+            "two_sided_95_upper": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            },
+            "upper_one_sided_95_bound": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            }
+          },
+          "required": [
+            "estimand_label",
+            "reference_condition_id",
+            "accepted_pair_ids",
+            "D_j",
+            "mean_D",
+            "standard_error",
+            "t_statistic",
+            "one_sided_p_value",
+            "upper_one_sided_95_bound",
+            "two_sided_95_lower",
+            "two_sided_95_upper",
+            "transformed_relative_effect",
+            "planned_pair_count",
+            "accepted_pair_count",
+            "decision"
+          ],
+          "type": "object"
+        },
+        "secondary_analyses": {
+          "additionalProperties": false,
+          "properties": {
+            "rq4_interactions": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "analysis_family": {
+                    "$ref": "common.schema.json#/$defs/nonemptyString"
+                  },
+                  "estimate": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "factor": {
+                    "enum": [
+                      "packet_size",
+                      "offered_load",
+                      "burst_shape",
+                      "flow_skew",
+                      "queue_count",
+                      "worker_count"
+                    ],
+                    "type": "string"
+                  },
+                  "incremental_contrast": {
+                    "enum": [
+                      "B1/B0",
+                      "B2/B1",
+                      "B3/B2"
+                    ],
+                    "type": "string"
+                  },
+                  "interval_lower": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "interval_upper": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  }
+                },
+                "required": [
+                  "factor",
+                  "incremental_contrast",
+                  "estimate",
+                  "interval_lower",
+                  "interval_upper",
+                  "analysis_family"
+                ],
+                "type": "object"
+              },
+              "minItems": 0,
+              "type": "array"
+            },
+            "rq5_model_explanation": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "ablation_plan_digest": {
+                    "$ref": "common.schema.json#/$defs/digest"
+                  },
+                  "counter_association": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "family_label": {
+                    "$ref": "common.schema.json#/$defs/nonemptyString"
+                  },
+                  "goodput_effect": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "held_out_rank": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "p999_effect": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "placement_changed": {
+                    "type": "boolean"
+                  },
+                  "term_or_group_id": {
+                    "$ref": "common.schema.json#/$defs/stableId"
+                  }
+                },
+                "required": [
+                  "term_or_group_id",
+                  "ablation_plan_digest",
+                  "placement_changed",
+                  "p999_effect",
+                  "goodput_effect",
+                  "counter_association",
+                  "held_out_rank",
+                  "family_label"
+                ],
+                "type": "object"
+              },
+              "minItems": 0,
+              "type": "array"
+            },
+            "rq6_stability": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "candidate_cost_rank_correlation": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "change_class": {
+                    "enum": [
+                      "Workload",
+                      "Topology",
+                      "FrontendReplication"
+                    ],
+                    "type": "string"
+                  },
+                  "change_id": {
+                    "$ref": "common.schema.json#/$defs/stableId"
+                  },
+                  "policy_rank_correlation": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "regret": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "top_choice_accuracy": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  },
+                  "validity_domain_result": {
+                    "$ref": "common.schema.json#/$defs/nonemptyString"
+                  }
+                },
+                "required": [
+                  "change_id",
+                  "change_class",
+                  "policy_rank_correlation",
+                  "candidate_cost_rank_correlation",
+                  "top_choice_accuracy",
+                  "regret",
+                  "validity_domain_result"
+                ],
+                "type": "object"
+              },
+              "minItems": 0,
+              "type": "array"
+            }
+          },
+          "required": [
+            "rq4_interactions",
+            "rq5_model_explanation",
+            "rq6_stability"
+          ],
+          "type": "object"
+        },
+        "sharp_null_sensitivity_labeled_secondary": {
+          "const": true
+        },
+        "table_figure_data_digests": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/digest"
+          },
+          "minItems": 0,
+          "type": "array"
+        }
+      },
+      "required": [
+        "analysis_plan_digest",
+        "decision_ledger_digest",
+        "primary",
+        "key_secondary",
+        "secondary_analyses",
+        "operational_feasibility",
+        "diagnostics",
+        "assumption_sensitive",
+        "sharp_null_sensitivity_labeled_secondary",
+        "failed_latency_imputed",
+        "packets_as_repetitions",
+        "table_figure_data_digests"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "StatisticalAnalysisArtifact"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "StatisticalAnalysisArtifact",
+  "type": "object"
+}

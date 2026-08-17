@@ -1,0 +1,102 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/traffic-generation-record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Committed trace execution and generator-fidelity record.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "actual_bit_rate": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "actual_packet_rate": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "expected_set_committed_before_send": {
+          "const": true
+        },
+        "flow_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "generator_utilization": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "intended_bit_rate": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "intended_packet_rate": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "latency_adaptive_rate": {
+          "const": false
+        },
+        "link_counters": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "counter_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "value": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "counter_id",
+              "value"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "run_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "send_events_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "sequence_manifest_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "trace_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "workload_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        }
+      },
+      "required": [
+        "run_id",
+        "workload_digest",
+        "sequence_manifest_digest",
+        "expected_set_committed_before_send",
+        "intended_packet_rate",
+        "actual_packet_rate",
+        "intended_bit_rate",
+        "actual_bit_rate",
+        "trace_digest",
+        "flow_digest",
+        "send_events_digest",
+        "link_counters",
+        "generator_utilization",
+        "latency_adaptive_rate"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "TrafficGenerationRecord"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "TrafficGenerationRecord",
+  "type": "object"
+}

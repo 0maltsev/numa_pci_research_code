@@ -1,0 +1,143 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/frontend-run-record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Invariant frontend path self-description and queue evidence.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "descriptor_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "hidden_fallback_detected": {
+          "type": "boolean"
+        },
+        "mode": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "offloads": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "packet_events_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "pci_bdf": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "per_queue_counters": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "counter_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "queue_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "value": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "width": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "queue_id",
+              "counter_id",
+              "value",
+              "width"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "port_identity": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "profile_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "queue_handles": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "catalog_entry_index": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "direction": {
+                "enum": [
+                  "rx",
+                  "tx"
+                ],
+                "type": "string"
+              },
+              "hardware_index": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "owner_ids": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "queue_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              }
+            },
+            "required": [
+              "direction",
+              "queue_id",
+              "hardware_index",
+              "owner_ids",
+              "catalog_entry_index"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "run_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "self_description_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        }
+      },
+      "required": [
+        "run_id",
+        "profile_digest",
+        "port_identity",
+        "pci_bdf",
+        "queue_handles",
+        "mode",
+        "offloads",
+        "descriptor_count",
+        "packet_events_digest",
+        "per_queue_counters",
+        "hidden_fallback_detected",
+        "self_description_digest"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "FrontendRunRecord"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "FrontendRunRecord",
+  "type": "object"
+}

@@ -1,0 +1,324 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/calibration-model-artifact.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Frozen nonnegative-ridge model and seen/unseen validation audit.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "admission_status": {
+          "enum": [
+            "Admitted",
+            "Condition-Coverage-Insufficient",
+            "Calibration-Failed",
+            "Rank-Deficient",
+            "Topology-Scale-Zero",
+            "Validation-Failed",
+            "Out-Of-Domain"
+          ],
+          "type": "string"
+        },
+        "coefficient_constraint": {
+          "const": "Nonnegative"
+        },
+        "condition_intercepts_unpenalized": {
+          "const": true
+        },
+        "coverage_audit_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "effective_coefficients": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "coefficient": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "feature_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "status": {
+                "enum": [
+                  "Enabled",
+                  "Merged",
+                  "Disabled",
+                  "Disabled-Zero-Scale"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "feature_id",
+              "coefficient",
+              "status"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "estimator": {
+          "const": "CompleteRunNonnegativeRidge"
+        },
+        "factorization": {
+          "additionalProperties": false,
+          "properties": {
+            "alpha": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "feature_id": {
+                    "$ref": "common.schema.json#/$defs/stableId"
+                  },
+                  "group": {
+                    "$ref": "common.schema.json#/$defs/nonemptyString"
+                  },
+                  "value": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  }
+                },
+                "required": [
+                  "group",
+                  "feature_id",
+                  "value"
+                ],
+                "type": "object"
+              },
+              "minItems": 0,
+              "type": "array"
+            },
+            "beta": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "group": {
+                    "$ref": "common.schema.json#/$defs/nonemptyString"
+                  },
+                  "value": {
+                    "$ref": "common.schema.json#/$defs/quantity"
+                  }
+                },
+                "required": [
+                  "group",
+                  "value"
+                ],
+                "type": "object"
+              },
+              "minItems": 0,
+              "type": "array"
+            },
+            "beta_top": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            },
+            "identity_verified": {
+              "type": "boolean"
+            },
+            "s_top": {
+              "$ref": "common.schema.json#/$defs/quantity"
+            }
+          },
+          "required": [
+            "s_top",
+            "alpha",
+            "beta",
+            "beta_top",
+            "identity_verified"
+          ],
+          "type": "object"
+        },
+        "fold_losses": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "admissible": {
+                "type": "boolean"
+              },
+              "fold_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "fold_size": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "lambda": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "mse_log_latency": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "fold_id",
+              "lambda",
+              "mse_log_latency",
+              "fold_size",
+              "admissible"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "global_intercept": {
+          "const": false
+        },
+        "lambda_grid": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/quantity"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "lambda_selection_rule": {
+          "const": "MinimumFoldSizeWeightedAdmissibleCvMseThenLargerLambdaOnExactTie"
+        },
+        "merge_disable_ledger": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "action": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              },
+              "feature_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "reason": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              }
+            },
+            "required": [
+              "feature_id",
+              "action",
+              "reason"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "model_validity_domain": {
+          "$ref": "common.schema.json#/$defs/validityDomain"
+        },
+        "n_tr": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "objective": {
+          "const": "(1/n_tr)*sum_r(y_r-delta_condition(r)-x_r^T*theta)^2+lambda*||theta||_2^2"
+        },
+        "seen_condition_validation": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "condition_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "log_mse": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "regret": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "residual_summary": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/quantity"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "spearman_rank": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "top_choice_accuracy": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "condition_id",
+              "log_mse",
+              "residual_summary",
+              "spearman_rank",
+              "top_choice_accuracy",
+              "regret"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "selected_lambda": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "unseen_condition_validation": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "absolute_mse_state": {
+                "const": "NotApplicable"
+              },
+              "condition_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "independent_relation_count": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "regret": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "spearman_rank": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "top_choice_accuracy": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "condition_id",
+              "absolute_mse_state",
+              "spearman_rank",
+              "top_choice_accuracy",
+              "regret",
+              "independent_relation_count"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        }
+      },
+      "required": [
+        "estimator",
+        "objective",
+        "n_tr",
+        "condition_intercepts_unpenalized",
+        "global_intercept",
+        "coefficient_constraint",
+        "lambda_grid",
+        "lambda_selection_rule",
+        "selected_lambda",
+        "fold_losses",
+        "coverage_audit_digest",
+        "effective_coefficients",
+        "merge_disable_ledger",
+        "factorization",
+        "seen_condition_validation",
+        "unseen_condition_validation",
+        "admission_status",
+        "model_validity_domain"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "CalibrationModelArtifact"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "CalibrationModelArtifact",
+  "type": "object"
+}

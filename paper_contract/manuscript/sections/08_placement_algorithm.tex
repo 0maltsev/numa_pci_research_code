@@ -1,0 +1,140 @@
+\section{Placement Algorithm}
+\label{sec:algorithm}
+
+\subsection{Inputs, outputs, and completion semantics}
+
+The planner receives a validated $G_s$; fixed RX/TX queue pairs; payload, descriptor, ring, state, worker-role, I/O-role, physical-execution-context, and PU inventories; the RTC/staged co-execution predicates; each frozen finite ownership catalog $\set P_q^d$ with control class, stable order, validation predicate, and digest; demand and operation counts for condition $\ell$; every eligibility, ownership, capacity, SMT, exclusivity, and isolation constraint; a frozen cost-model artifact; an optional logical-mapping restriction such as $\set R_0$; an optional previous placement; and deterministic candidate and search budgets. Observed-only shares enter through their frozen catalog proxy and cannot be varied. Random choice is never used for placement ties.
+
+The status vocabulary separates five logically different outcomes.
+
+\begin{description}[leftmargin=28mm,style=nextline,itemsep=2pt]
+  \item[\normalfont\textsc{Feasible}] A complete $\Pi\in\set F(G_s,\ell)$ has been revalidated and emitted, possibly at a named fallback fidelity level.
+  \item[\normalfont\textsc{Search-Limited}] Every required candidate list may be fully exposed, but bounded-depth, node-budgeted construction did not find a feasible global assignment. This status makes no infeasibility claim.
+  \item[\normalfont\textsc{Cap-Limited}] A candidate-generation or exposure cap stopped at least one finite queue-local domain before its enumerator certified exhaustion.
+  \item[\normalfont\textsc{Data-Incomplete}] A safety-critical topology, capability, unit, ownership, or location fact is unknown and no permitted lower-fidelity formulation can be planned safely.
+  \item[\normalfont\textsc{Proven-Infeasible}] Reserved for an independently checkable certificate from a complete exact feasibility procedure over the original constrained problem.
+\end{description}
+
+Algorithm~\ref{alg:placement} is a bounded heuristic, not such an exact procedure, and never returns \textsc{Proven-Infeasible}. Candidate-list exhaustion means only that all queue-local bundles were exposed. Search-budget exhaustion concerns combinations of those bundles. Neither event, separately or together under bounded backtracking, proves that $\set F(G_s,\ell)$ is empty.
+
+\subsection{Candidate bundles and safe exposure}
+
+For $q$, let $\set L_q=\{\omega(q)\}\cup O^{\mathrm{rx}}(q)\cup O^{\mathrm{tx}}(q)$ be the logical roles referenced by a candidate. Stable raw enumeration constructs
+\begin{align}
+ b_q=(&q,r_q,t_q,\mu^{\mathrm{rx}},\mu^{\mathrm{tx}},
+ \xi^{\mathrm{rx}},\xi^{\mathrm{tx}},\varphi,\zeta,w,\notag\\
+ &\kappa^{\mathrm{rx}},O^{\mathrm{rx}},\vect{\bar\pi}^{\mathrm{rx}},
+ \kappa^{\mathrm{tx}},O^{\mathrm{tx}},\vect{\bar\pi}^{\mathrm{tx}},
+ \gamma|_{\set L_q},\eta|_{\gamma(\set L_q)}).
+ \label{eq:candidate-bundle}
+\end{align}
+The tuple $(q,r_q,t_q)$ and its endpoint identities are immutable. For each direction, the bundle enumerator first chooses one admissible finite index $\kappa^d\in\set I_q^d$ and copies its derived owner set and planning-share vector; it never generates a real-valued share. A bundle includes every referenced logical owner, service share, occupancy group, and PU. Queue-local rejection checks catalog membership and control scope, null-object eligibility, RTC equality or staged inequality of occupancy groups, co-execution compatibility, role/context/PU eligibility, and direction-specific queue compatibility. Global construction later rechecks aggregate capacities and consistency: if two bundles name the same worker role, I/O role, or physical execution context, the shared mapping must agree; material pools and rings accumulate all reservations.
+
+Candidate pruning is deliberately conservative. Bundle $b$ can dominate $b'$ only if they have identical immutable queue identities, selected resource and role identities, ownership-catalog indices and derived shares, occupancy groups, PU assignments, capacity-consumption vectors, conflict/isolation relations, and incidence on every load-bearing resource, while every primitive cost coordinate of $b$ is no greater and at least one is smaller. This state-independent certificate makes them interchangeable in every residual state except for the improved coordinates. A shorter scalar score or a “more local” path is insufficient because global congestion can reverse that order.
+
+Each finite raw domain has a deterministic enumerator and an \textsc{exhausted} flag. The planner initially exposes at most $K$ unpruned candidates per queue and expands the prefix geometrically after a failed construction. $K$ is a performance control, not a feasibility assumption. If an operator cap stops enumeration before every relevant flag is \textsc{exhausted}, the result is \textsc{Cap-Limited}. If every list is exhausted, its final size is $K_{0q}$, but failure of the bounded global search is still \textsc{Search-Limited}.
+
+\subsection{Construction, conflicts, and exact neighborhoods}
+
+Pipelines are ordered by decreasing total service demand
+$a^W_{q\ell}+\sum_d a^{H,d}_{q\ell}$; ties use port BDF, RX queue index, then TX queue index. For each pipeline, construction chooses the feasible exposed candidate with the lowest incremental value of \cref{eq:cost}. Ties compare, in order, maximum projected PU utilization, maximum projected capacity-resource utilization, number of cross-socket primitives, execution-context PU indices, material memory identities, ring identity, worker identity, and owner-role identities.
+
+When pipelines outnumber preferred PUs, sharing is allowed only through declared shared roles or execution contexts and only while every demand, occupancy, ownership, and SMT constraint remains satisfied. RTC roles already share one occupancy group and do not consume an extra slot. When preferred memory is insufficient, the next feasible location-qualified material object is considered; page size, usable capacity, and allocation policy are never changed. On conflict, deterministic backtracking explores at most depth $D$ and at most $B_S$ construction nodes. The failure record contains observed constraints and assignments from searched branches; it is a conflict witness, not a minimal unsatisfiable set or infeasibility certificate.
+
+After a feasible construction, every refinement pass enumerates these neighborhoods completely:
+
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+  \item replace one pipeline's selected bundle by every exposed generated alternative;
+  \item for every compatible pair $(q,q')$, exchange every nonempty union of six atomic assignment units: RX/TX payload pools; RX/TX descriptor objects; event-ring/state objects; worker role; RX ownership-catalog entry; and TX ownership-catalog entry;
+  \item relocate one active physical execution context $x$ to every eligible PU, updating every logical role and pipeline that references $x$ atomically;
+  \item apply every admissible logical-role-to-execution-context regrouping over existing contexts that preserves the frozen RTC equalities, staged inequalities, co-execution predicates, and resource cardinalities; and
+  \item relocate one shared material payload pool, descriptor object, event ring, or application-state object to every compatible location-qualified object, updating all users atomically.
+\end{enumerate}
+
+An exchange never swaps $q$, $r_q$, $t_q$, port/BDF identity, flow steering, or hardware endpoints. It changes only the selected atomic assignment units; the global $\gamma$ and $\eta$ maps remain attached to their role/context identities unless neighborhoods 3 or 4 changes them. Each proposed pair is accepted only after queue-local eligibility and all global memory, worker-role, I/O-role, execution-context, PU, ownership, SMT, exclusivity, and isolation constraints are recomputed for both pipelines and every shared user. Every feasible member is scored. The largest strictly positive reduction is applied; equal reductions use the same global tie order. Refinement stops at a local optimum for these neighborhoods or after $I$ passes, without implying global optimality.
+
+\begin{algorithm}[t]
+\caption{Deterministic topology-aware placement}
+\label{alg:placement}
+\begin{algorithmic}[1]
+\Require Validated inputs, finite ownership catalogs, workload $\ell$, frozen model, initial exposure $K$, bounds $D,B_S,I$
+\Ensure \textsc{Feasible}, \textsc{Search-Limited}, \textsc{Cap-Limited}, or \textsc{Data-Incomplete}
+\If{a safety-critical fact is unknown and no permitted fallback removes its use}
+  \State \Return \textsc{Data-Incomplete}
+\EndIf
+\ForAll{$q\in\set Q$ in stable queue-identity order}
+  \State Enumerate queue-local bundles in stable order up to the current exposure
+  \State Enforce null/RTC/staged eligibility; apply only certified state-independent dominance
+\EndFor
+\State Order pipelines by decreasing service demand and stable queue identity
+\Repeat
+  \State Construct greedily with exact residual checks and depth-$D$, node-$B_S$ backtracking
+  \If{a placement is found} \State \textbf{break} \EndIf
+  \If{some candidate domain is not exhausted and its cap forbids expansion}
+    \State \Return \textsc{Cap-Limited}
+  \EndIf
+  \State Expand every nonexhausted candidate prefix geometrically and regenerate the bounded search
+\Until{a placement is found or every candidate domain is exhausted}
+\If{no placement was found}
+  \State \Return \textsc{Search-Limited}
+\EndIf
+\For{$i=1$ to $I$}
+  \State Enumerate and score every feasible move in the five declared neighborhoods
+  \If{no move strictly reduces $J$} \State \textbf{break} \EndIf
+  \State Apply the best move using the deterministic tie order
+\EndFor
+\State Revalidate all hard constraints and emit \textsc{Feasible}, $\Pi$, decomposed score, audit, and input digest
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Complexity and computational status}
+
+Let $Q=|\set Q|$, $T=|\set T_0|+|\set E_L|$, and $K_0=\max_q K_{0q}$ when every queue-local enumerator is exhausted. Let $P_q^W$ denote the number of eligible worker-role execution-context/PU patterns and $H_q^d$ the number of feasible direction-$d$ catalog-entry/occupancy/PU patterns. Before eligibility filtering,
+\begin{equation}
+ K_{0q}\leq |\set M^{\mathrm{rx}}||\set M^{\mathrm{tx}}|
+ |\set D^{\mathrm{rx}}||\set D^{\mathrm{tx}}||\set B||\set A||\set W|P_q^W
+ H_q^{\mathrm{rx}}H_q^{\mathrm{tx}},
+ \label{eq:candidate-bound}
+\end{equation}
+where the distinguished null objects provide cardinality-one options only when eligible and $P_q^W\leq XC$ when at most $X$ physical contexts and $C$ PUs per context are eligible for the chosen worker. If at most $X$ physical contexts and $C$ PUs per owner are eligible, then the finite catalog gives the explicit bound
+\begin{equation}
+ H_q^d\leq\sum_{i\in\set I_q^d}(XC)^{|O_{qdi}|}.
+ \label{eq:ownership-candidate-bound}
+\end{equation}
+For $k_q^d=0$ this factor is one; for the primary single-owner profile it is at most $|\set I_q^d|XC$. Shared ownership can still make enumeration combinatorial through the enumerated owner sets and their context mappings, but no continuous-simplex factor exists. Since every resource inventory, $\set I_q^d$, execution-context choice, and PU choice is finite, \cref{eq:candidate-bound,eq:ownership-candidate-bound} establish finiteness of each queue-local domain and of their global Cartesian product.
+
+With constant-time typed path queries after preprocessing, exhaustive generation/scoring costs $O(QK_0T)$, direct certified dominance $O(QK_0^2T)$, and sorting $O(QK_0\log K_0+Q\log Q)$. A bounded construction explores at most $B_S$ nodes and performs at most $O(QK_0)$ residual checks per root attempt; the depth-only upper bound is $O((QK_0)^{D+1})$, capped operationally by $B_S$. Let $N_{\mathrm{exch}}\leq(2^6-1)\binom Q2$, $N_{\mathrm{shared}}$ be the enumerated context/regrouping/material-object moves, and $C_J$ the cost of a complete feasibility/score update. Refinement costs
+\begin{equation}
+ O\!\left(I C_J(QK_0+N_{\mathrm{exch}}+N_{\mathrm{shared}})\right).
+ \label{eq:refinement-complexity}
+\end{equation}
+The audit reports exposure flags, $K_{0q}$ when known, cap expansions, search nodes/depth, exact neighborhood sizes, time, and peak memory.
+
+The formulation resembles capacitated assignment and topology mapping, but this manuscript supplies no reduction for the complete typed formulation and makes no complexity-class claim. The exact optimization in \cref{eq:optimization} is a specification; Algorithm~\ref{alg:placement} has finite budgets and no completeness or global-optimality guarantee.
+
+\paragraph{Independent exact-small reference.}
+For an eligible fixture, let $\set B_q^{\mathrm{raw}}$ be the complete finite bundle catalog obtained from all resource inventories and every entry of $\set P_q^{\mathrm{rx}}$ and $\set P_q^{\mathrm{tx}}$, after only syntactic construction. The exact search universe is
+\begin{equation}
+ \set U_{\mathrm{exact}}=\prod_{q\in\set Q}\set B_q^{\mathrm{raw}},
+ \qquad N_{\mathrm{cart}}=\prod_q|\set B_q^{\mathrm{raw}}|.
+ \label{eq:exact-universe}
+\end{equation}
+The reference procedure uses the frozen lexicographic bundle order and visits every element of $\set U_{\mathrm{exact}}$. It applies no heuristic dominance rule, candidate cap, locality filter, incumbent-derived restriction, or output from Algorithm~\ref{alg:placement}. For each complete combination it reconstructs shared $\gamma$ and $\eta$, tests every condition in $\set F(G_s,\ell)$, records every failing constraint class, and evaluates the full $J$ exactly once if feasible. The minimum uses the same declared global tie order as the specification. A nonempty feasible set returns \textsc{Exact-Feasible}, its minimizing placement, objective value, and a complete-search certificate. An empty set returns \textsc{Proven-Infeasible} only after the visited-combination count equals $N_{\mathrm{cart}}$ and all finite enumerators certify exhaustion. Interruption, arithmetic failure, or an incomplete enumerator can never produce that status.
+
+Eligibility is decided before search from four frozen implementation-benchmark limits: maximum pipelines $Q_{\mathrm{exact}}$, maximum $N_{\mathrm{cart}}$, peak-memory budget $M_{\mathrm{exact}}$, and wall-time budget $T_{\mathrm{exact}}$. Their numerical values are selected from off-stand completion benchmarks without heuristic or latency outcomes and frozen before the exact campaign. A fixture is eligible only if $Q\leq Q_{\mathrm{exact}}$, $N_{\mathrm{cart}}$ is within its limit, and conservative preflight memory/time estimates are within $M_{\mathrm{exact}}$ and $T_{\mathrm{exact}}$. Otherwise, or if the frozen runtime budget expires before certified exhaustion, the sole result is \textsc{Exact-Budget-Exceeded}; it is neither infeasibility nor a heuristic failure. The audit retains input and catalog digests, all four limits and estimates, $N_{\mathrm{cart}}$, visited and feasible counts, per-constraint rejection counts, incumbent history, best placement and value when one exists, stable tie trace, elapsed time, peak memory, and terminal status.
+
+The exact procedure will be implemented and tested as a separate future component. Minimal hand-constructed fixtures will cover one feasible placement, a tied optimum, each hard-constraint rejection class, globally inconsistent shared mappings, an empty finite universe, and a budget-exceeded case. Expected counts and optima will be checked manually before the procedure is used to assess the heuristic.
+
+\paragraph{Quality measures.}
+Algorithm quality is evaluated independently of end-to-end policy benefit. On exact-eligible fixtures, the study reports objective rank, normalized optimality gap
+\begin{equation}
+ g=\frac{J(\Pi_{\mathrm{heur}})-J(\Pi^\star)}
+ {\max\{|J(\Pi^\star)|,\epsilon\}},\qquad \epsilon>0,
+\end{equation}
+and the missed-feasibility rate: the fraction of \textsc{Exact-Feasible} fixtures for which the heuristic returned \textsc{Search-Limited} or \textsc{Cap-Limited}. Fixtures with \textsc{Exact-Budget-Exceeded} have no known optimum and are excluded from gap and missed-feasibility denominators. This evaluation can expose incompleteness; it does not make the main heuristic exact. A deterministic locality-only heuristic supplies a second comparator. Larger fixtures report score, completion-status frequencies, planning time, peak memory, and scaling without calling the best observed result optimal.
+
+\subsection{Incomplete data, fallback, and re-planning}
+
+Four placement-fidelity levels are named in advance. \textsc{Full} requires PCIe ancestry, NUMA associations, queue identities, location-qualified memory, and applicable context control. \textsc{NUMA} disables unavailable PCIe/calibrated primitives but still performs verified ownership, memory, ring, worker, execution-context, and PU mapping. \textsc{CPU} applies verified logical-owner/worker execution placement without claiming memory or I/O locality. \textsc{Default} delegates the corresponding controls and is the first experimental baseline. Fidelity and completion status are orthogonal: a successful permitted fallback is \textsc{Feasible} with a lower level; otherwise missing safety-critical data yield \textsc{Data-Incomplete}. \textsc{Search-Limited} and \textsc{Cap-Limited} outputs contain no plan and are never pooled with \textsc{Full}.
+
+The primary experiment uses static planning before each run. Optional runtime re-planning may consume only a preceding observation interval, includes $\widehat R$ in \cref{eq:cost}, and applies at a declared epoch boundary; it is a separate treatment. Stale snapshots, hotplug, driver reload, read-back mismatch, insufficient huge pages, failed queue ownership, or unavailable privilege trigger rollback to the last verified state and invalidate the run. An unknown is never converted into apparent locality.

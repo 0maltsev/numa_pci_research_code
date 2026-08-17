@@ -1,0 +1,104 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/frontend-capability-profile.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Qualified frontend control and read-back capability surface.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "control_surfaces": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "control_class": {
+                "enum": [
+                  "Direct",
+                  "ValidatedIndirect",
+                  "ObservedOnly",
+                  "Unsupported"
+                ],
+                "type": "string"
+              },
+              "coverage": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              },
+              "qualification_evidence_digests": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/digest"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "readback_method": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "request_method": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "required_privileges": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "surface_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              }
+            },
+            "required": [
+              "surface_id",
+              "control_class",
+              "request_method",
+              "readback_method",
+              "coverage",
+              "required_privileges",
+              "qualification_evidence_digests"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "driver_identity": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "frontend_identity": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "kernel_identity": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "nic_identity": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "profile_validity_domain": {
+          "$ref": "common.schema.json#/$defs/validityDomain"
+        }
+      },
+      "required": [
+        "frontend_identity",
+        "driver_identity",
+        "kernel_identity",
+        "nic_identity",
+        "control_surfaces",
+        "profile_validity_domain"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "FrontendCapabilityProfile"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "FrontendCapabilityProfile",
+  "type": "object"
+}

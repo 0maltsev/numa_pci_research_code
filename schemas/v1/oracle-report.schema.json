@@ -1,0 +1,157 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/oracle-report.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Exhaustive expectation/response correctness classification.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "accounting_reconciled": {
+          "type": "boolean"
+        },
+        "ambiguous_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "corrupt_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "drain_status": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "duplicate_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "latency_eligible_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "missing_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "out_of_range_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "raw_receive_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "reordered_count": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "response_categories": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "binding_results": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "candidate_response_ids": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "expected_sequence_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "final_category": {
+                "enum": [
+                  "valid",
+                  "missing",
+                  "corrupt",
+                  "duplicate",
+                  "ambiguous"
+                ],
+                "type": "string"
+              },
+              "format_results": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "out_of_range": {
+                "type": "boolean"
+              },
+              "payload_results": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "timestamp_results": {
+                "items": {
+                  "$ref": "common.schema.json#/$defs/nonemptyString"
+                },
+                "minItems": 0,
+                "type": "array"
+              }
+            },
+            "required": [
+              "expected_sequence_id",
+              "candidate_response_ids",
+              "format_results",
+              "payload_results",
+              "binding_results",
+              "timestamp_results",
+              "final_category",
+              "out_of_range"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "run_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "sequence_manifest_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "valid_sequence_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        }
+      },
+      "required": [
+        "run_id",
+        "sequence_manifest_digest",
+        "response_categories",
+        "valid_sequence_ids",
+        "missing_count",
+        "corrupt_count",
+        "duplicate_count",
+        "ambiguous_count",
+        "out_of_range_count",
+        "reordered_count",
+        "raw_receive_count",
+        "latency_eligible_count",
+        "drain_status",
+        "accounting_reconciled"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "OracleReport"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "OracleReport",
+  "type": "object"
+}

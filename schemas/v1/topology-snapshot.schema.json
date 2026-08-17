@@ -1,0 +1,245 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/topology-snapshot.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Validated typed topology graph with explicit unknown inventory.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "boot_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "edges": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "attributes": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "attribute_id": {
+                      "$ref": "common.schema.json#/$defs/stableId"
+                    },
+                    "confidence": {
+                      "$ref": "common.schema.json#/$defs/quantity"
+                    },
+                    "name": {
+                      "$ref": "common.schema.json#/$defs/nonemptyString"
+                    },
+                    "observed_at": {
+                      "$ref": "common.schema.json#/$defs/timestamp"
+                    },
+                    "provenance_class": {
+                      "enum": [
+                        "Discovered",
+                        "Derived",
+                        "Calibrated",
+                        "Unknown"
+                      ],
+                      "type": "string"
+                    },
+                    "quantity": {
+                      "$ref": "common.schema.json#/$defs/quantity"
+                    },
+                    "source_digest": {
+                      "$ref": "common.schema.json#/$defs/digest"
+                    },
+                    "value": {
+                      "$ref": "common.schema.json#/$defs/statefulValue"
+                    }
+                  },
+                  "required": [
+                    "attribute_id",
+                    "name",
+                    "value",
+                    "quantity",
+                    "provenance_class",
+                    "source_digest",
+                    "observed_at",
+                    "confidence"
+                  ],
+                  "type": "object"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "directional": {
+                "type": "boolean"
+              },
+              "edge_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "edge_type": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              },
+              "from_vertex_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "to_vertex_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              }
+            },
+            "required": [
+              "edge_id",
+              "edge_type",
+              "from_vertex_id",
+              "to_vertex_id",
+              "directional",
+              "attributes"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "host_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "snapshot_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "source_digests": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/digest"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "unknown_inventory": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "fact_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "reason": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              },
+              "state": {
+                "enum": [
+                  "Unknown",
+                  "Missing",
+                  "Unsupported",
+                  "NotApplicable"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "fact_id",
+              "state",
+              "reason"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "validation_findings": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/finding"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "vertices": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "attributes": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "attribute_id": {
+                      "$ref": "common.schema.json#/$defs/stableId"
+                    },
+                    "confidence": {
+                      "$ref": "common.schema.json#/$defs/quantity"
+                    },
+                    "name": {
+                      "$ref": "common.schema.json#/$defs/nonemptyString"
+                    },
+                    "observed_at": {
+                      "$ref": "common.schema.json#/$defs/timestamp"
+                    },
+                    "provenance_class": {
+                      "enum": [
+                        "Discovered",
+                        "Derived",
+                        "Calibrated",
+                        "Unknown"
+                      ],
+                      "type": "string"
+                    },
+                    "quantity": {
+                      "$ref": "common.schema.json#/$defs/quantity"
+                    },
+                    "source_digest": {
+                      "$ref": "common.schema.json#/$defs/digest"
+                    },
+                    "value": {
+                      "$ref": "common.schema.json#/$defs/statefulValue"
+                    }
+                  },
+                  "required": [
+                    "attribute_id",
+                    "name",
+                    "value",
+                    "quantity",
+                    "provenance_class",
+                    "source_digest",
+                    "observed_at",
+                    "confidence"
+                  ],
+                  "type": "object"
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "vertex_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "vertex_type": {
+                "$ref": "common.schema.json#/$defs/nonemptyString"
+              }
+            },
+            "required": [
+              "vertex_id",
+              "vertex_type",
+              "attributes"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "host_id",
+        "boot_id",
+        "vertices",
+        "edges",
+        "unknown_inventory",
+        "validation_findings",
+        "source_digests"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "TopologySnapshot"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "TopologySnapshot",
+  "type": "object"
+}

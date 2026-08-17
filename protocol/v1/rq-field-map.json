@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0.0",
+  "research_questions": {
+    "RQ1": {
+      "estimand": "Accepted-pair B1/B0 CPU-affinity increment",
+      "fields": [
+        "AcceptanceRecord.payload.A_bj",
+        "PageEquivalenceRecord.payload.state",
+        "AggregatedDataset.payload.page_equivalence_records[*].E_mem_j",
+        "AggregatedDataset.payload.adjacent_pair_indicators[*].A_1_0",
+        "AggregatedDataset.payload.runs[*].quantiles.p999",
+        "StatisticalAnalysisArtifact.payload.key_secondary.rq1_b1_b0.mean_log_ratio",
+        "StatisticalAnalysisArtifact.payload.key_secondary.rq1_b1_b0.absolute_difference",
+        "StatisticalAnalysisArtifact.payload.key_secondary.rq1_b1_b0.holm_adjusted_p_value"
+      ]
+    },
+    "RQ2": {
+      "estimand": "Accepted-pair B2/B1 memory-binding increment",
+      "fields": [
+        "AcceptanceRecord.payload.A_bj",
+        "AggregatedDataset.payload.adjacent_pair_indicators[*].A_2_1",
+        "AggregatedDataset.payload.runs[*].quantiles.p999",
+        "CPUAccessProfile.payload.objects[*].accessors[*].demand_share",
+        "LocationQualifiedObject.payload.desired_distribution",
+        "LocationQualifiedObject.payload.requested_policy",
+        "LocationQualifiedObject.payload.observed_distribution",
+        "StatisticalAnalysisArtifact.payload.key_secondary.rq2_b2_b1.mean_log_ratio",
+        "StatisticalAnalysisArtifact.payload.key_secondary.rq2_b2_b1.absolute_difference",
+        "StatisticalAnalysisArtifact.payload.key_secondary.rq2_b2_b1.holm_adjusted_p_value"
+      ]
+    },
+    "RQ3": {
+      "estimand": "Sole-primary conditional accepted-pair B3/B2 complete-placement increment",
+      "fields": [
+        "AggregatedDataset.payload.adjacent_pair_indicators[*].A_3_2",
+        "AggregatedDataset.payload.runs[*].quantiles.p999",
+        "StatisticalAnalysisArtifact.payload.primary.estimand_label",
+        "StatisticalAnalysisArtifact.payload.primary.reference_condition_id",
+        "StatisticalAnalysisArtifact.payload.primary.accepted_pair_ids",
+        "StatisticalAnalysisArtifact.payload.primary.D_j",
+        "StatisticalAnalysisArtifact.payload.primary.mean_D",
+        "StatisticalAnalysisArtifact.payload.primary.standard_error",
+        "StatisticalAnalysisArtifact.payload.primary.t_statistic",
+        "StatisticalAnalysisArtifact.payload.primary.one_sided_p_value",
+        "StatisticalAnalysisArtifact.payload.primary.upper_one_sided_95_bound",
+        "StatisticalAnalysisArtifact.payload.primary.two_sided_95_lower",
+        "StatisticalAnalysisArtifact.payload.primary.two_sided_95_upper",
+        "StatisticalAnalysisArtifact.payload.primary.transformed_relative_effect",
+        "StatisticalAnalysisArtifact.payload.primary.planned_pair_count",
+        "StatisticalAnalysisArtifact.payload.primary.accepted_pair_count",
+        "StatisticalAnalysisArtifact.payload.primary.decision"
+      ]
+    },
+    "RQ4": {
+      "estimand": "Workload modification of the three adjacent placement increments",
+      "fields": [
+        "WorkloadSpec.payload.packet_bytes",
+        "WorkloadSpec.payload.resolved_packet_rate",
+        "WorkloadSpec.payload.burst_model",
+        "WorkloadSpec.payload.flow_distribution",
+        "WorkloadSpec.payload.queue_count",
+        "WorkloadSpec.payload.worker_count",
+        "StatisticalAnalysisArtifact.payload.secondary_analyses.rq4_interactions[*].factor",
+        "StatisticalAnalysisArtifact.payload.secondary_analyses.rq4_interactions[*].incremental_contrast",
+        "StatisticalAnalysisArtifact.payload.secondary_analyses.rq4_interactions[*].estimate"
+      ]
+    },
+    "RQ5": {
+      "estimand": "Placement/response changes after owned cost-term ablation and explanatory association",
+      "fields": [
+        "CostTermValue.payload.term_id",
+        "CostTermValue.payload.physical_mechanism",
+        "CostTermValue.payload.normalized_value",
+        "PlacementPlan.payload.assignments",
+        "TelemetryRecord.payload.extended_value",
+        "CalibrationModelArtifact.payload.effective_coefficients",
+        "CalibrationModelArtifact.payload.seen_condition_validation",
+        "CalibrationModelArtifact.payload.unseen_condition_validation",
+        "StatisticalAnalysisArtifact.payload.secondary_analyses.rq5_model_explanation[*].p999_effect",
+        "StatisticalAnalysisArtifact.payload.secondary_analyses.rq5_model_explanation[*].counter_association",
+        "StatisticalAnalysisArtifact.payload.secondary_analyses.rq5_model_explanation[*].held_out_rank"
+      ]
+    },
+    "RQ6": {
+      "estimand": "Policy and model-ranking stability under predeclared workload/topology change",
+      "fields": [
+        "TopologySnapshot.payload.snapshot_id",
+        "CalibrationModelArtifact.payload.model_validity_domain",
+        "CalibrationModelArtifact.payload.unseen_condition_validation",
+        "StatisticalAnalysisArtifact.payload.secondary_analyses.rq6_stability[*].change_class",
+        "StatisticalAnalysisArtifact.payload.secondary_analyses.rq6_stability[*].policy_rank_correlation",
+        "StatisticalAnalysisArtifact.payload.secondary_analyses.rq6_stability[*].candidate_cost_rank_correlation",
+        "StatisticalAnalysisArtifact.payload.secondary_analyses.rq6_stability[*].top_choice_accuracy",
+        "StatisticalAnalysisArtifact.payload.secondary_analyses.rq6_stability[*].regret"
+      ]
+    }
+  },
+  "mandatory_operational_outputs": {
+    "policy_attempt_acceptance": "AggregatedDataset.payload.attrition[*].accepted_count",
+    "adjacent_pair_completion": "AggregatedDataset.payload.adjacent_pair_indicators",
+    "policy_failure_categories": "AggregatedDataset.payload.attrition[*].failure_category",
+    "policy_failure_rates": "AggregatedDataset.payload.attrition[*].failure_rate",
+    "incomplete_block_policy": "AggregatedDataset.payload.attrition[*].incomplete_block_policy",
+    "scientific_exclusion": "AggregatedDataset.payload.runs[*].scientifically_excluded",
+    "primary_operational_report": "StatisticalAnalysisArtifact.payload.operational_feasibility"
+  }
+}

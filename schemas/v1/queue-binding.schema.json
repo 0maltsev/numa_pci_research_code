@@ -1,0 +1,176 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/queue-binding.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Field-level endpoint/queue/catalog/worker/context binding.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "control_class": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "descriptor_object_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "direction": {
+          "enum": [
+            "rx",
+            "tx"
+          ],
+          "type": "string"
+        },
+        "endpoint_bdf": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "hardware_queue_index": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "observation_coverage": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "observed_range_result": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "observed_shares": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "owner_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "share": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "owner_id",
+              "share"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "owner_role_ids": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "ownership_catalog_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "paired_queue_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "payload_pool_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "pipeline_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "planning_shares": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "owner_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "share": {
+                "$ref": "common.schema.json#/$defs/quantity"
+              }
+            },
+            "required": [
+              "owner_id",
+              "share"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "port_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "reference_mapping_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "request_action": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "role_context_pu_bindings": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "context_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              },
+              "effective_pu": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "requested_pu": {
+                "$ref": "common.schema.json#/$defs/statefulValue"
+              },
+              "role_id": {
+                "$ref": "common.schema.json#/$defs/stableId"
+              }
+            },
+            "required": [
+              "role_id",
+              "context_id",
+              "requested_pu",
+              "effective_pu"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "rss_digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "selected_entry_index": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        }
+      },
+      "required": [
+        "endpoint_bdf",
+        "port_id",
+        "direction",
+        "hardware_queue_index",
+        "pipeline_id",
+        "paired_queue_id",
+        "descriptor_object_id",
+        "payload_pool_id",
+        "reference_mapping_digest",
+        "ownership_catalog_digest",
+        "selected_entry_index",
+        "owner_role_ids",
+        "planning_shares",
+        "control_class",
+        "request_action",
+        "observed_shares",
+        "observed_range_result",
+        "observation_coverage",
+        "role_context_pu_bindings",
+        "rss_digest"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "QueueBinding"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "QueueBinding",
+  "type": "object"
+}

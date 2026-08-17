@@ -1,0 +1,85 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/packet-observation.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One raw received candidate with no implied validity.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "binding_result": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "candidate_response_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "clock_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "converted_latency": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "duplicate_reorder_category": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "epoch_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "format_result": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "observed_queue_id": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "parsed_sequence": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "payload_result": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        },
+        "request_tx_raw_ticks": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "response_rx_raw_ticks": {
+          "$ref": "common.schema.json#/$defs/quantity"
+        },
+        "run_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "timestamp_validity": {
+          "$ref": "common.schema.json#/$defs/nonemptyString"
+        }
+      },
+      "required": [
+        "run_id",
+        "candidate_response_id",
+        "parsed_sequence",
+        "observed_queue_id",
+        "request_tx_raw_ticks",
+        "response_rx_raw_ticks",
+        "clock_id",
+        "epoch_id",
+        "converted_latency",
+        "format_result",
+        "payload_result",
+        "binding_result",
+        "duplicate_reorder_category",
+        "timestamp_validity"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "PacketObservation"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "PacketObservation",
+  "type": "object"
+}

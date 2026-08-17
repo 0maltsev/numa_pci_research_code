@@ -1,0 +1,98 @@
+{
+  "$id": "https://numa-pcie-research.invalid/schemas/v1/environment-manifest.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Machine-readable host/build/environment protocol evidence.",
+  "properties": {
+    "meta": {
+      "$ref": "common.schema.json#/$defs/recordMetadata"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "boot_identity": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "build_identity": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "clock_description": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "driver_identity": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "firmware_inventory": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "frontend_identity": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "hardware_inventory": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "host_identity": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "host_role": {
+          "enum": [
+            "TG",
+            "SUT",
+            "Diagnostic"
+          ],
+          "type": "string"
+        },
+        "kernel_identity": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "missing_fields": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonemptyString"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "power_isolation_settings": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        },
+        "raw_source_digests": {
+          "items": {
+            "$ref": "common.schema.json#/$defs/digest"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "topology_snapshot_digest": {
+          "$ref": "common.schema.json#/$defs/statefulValue"
+        }
+      },
+      "required": [
+        "host_role",
+        "host_identity",
+        "boot_identity",
+        "hardware_inventory",
+        "firmware_inventory",
+        "kernel_identity",
+        "driver_identity",
+        "frontend_identity",
+        "build_identity",
+        "power_isolation_settings",
+        "clock_description",
+        "topology_snapshot_digest",
+        "raw_source_digests",
+        "missing_fields"
+      ],
+      "type": "object"
+    },
+    "record_type": {
+      "const": "EnvironmentManifest"
+    }
+  },
+  "required": [
+    "meta",
+    "record_type",
+    "payload"
+  ],
+  "title": "EnvironmentManifest",
+  "type": "object"
+}
